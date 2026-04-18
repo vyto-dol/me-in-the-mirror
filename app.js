@@ -1,57 +1,73 @@
 const accessoryCatalog = [
   {
     id: "visor",
-    label: "Hero Visor (Mặt nạ)",
-    hint: "Face mask for the hero / Mặt nạ anh hùng",
+    label: "Hero Visor",
+    translation: "Mặt nạ",
+    summaryLabel: "Hero Visor (Mặt nạ)",
+    hint: "Face mask for the hero",
     icon: "🥽",
     iconClass: "visor",
   },
   {
     id: "crown",
-    label: "Power Crown (Vương miện)",
-    hint: "Golden crown on top / Vương miện vàng",
+    label: "Power Crown",
+    translation: "Vương miện",
+    summaryLabel: "Power Crown (Vương miện)",
+    hint: "Golden crown on top",
     icon: "👑",
     iconClass: "crown",
   },
   {
     id: "comic",
-    label: "Comic Burst (Hiệu ứng nổ)",
-    hint: "Action burst near the mirror / Hiệu ứng truyện tranh",
+    label: "Comic Burst",
+    translation: "Hiệu ứng nổ",
+    summaryLabel: "Comic Burst (Hiệu ứng nổ)",
+    hint: "Action burst near the mirror",
     icon: "💥",
     iconClass: "comic",
   },
   {
     id: "lightning",
-    label: "Lightning Bolt (Tia sét)",
-    hint: "Energy bolt on the outfit / Tia sét năng lượng",
+    label: "Lightning Bolt",
+    translation: "Tia sét",
+    summaryLabel: "Lightning Bolt (Tia sét)",
+    hint: "Energy bolt on the outfit",
     icon: "⚡",
     iconClass: "lightning",
   },
   {
     id: "belt",
-    label: "Victory Belt (Đai chiến thắng)",
-    hint: "Champion belt at the waist / Đai ở eo",
+    label: "Victory Belt",
+    translation: "Đai chiến thắng",
+    summaryLabel: "Victory Belt (Đai chiến thắng)",
+    hint: "Champion belt at the waist",
     icon: "🥇",
     iconClass: "belt",
   },
   {
     id: "badge",
-    label: "Wing Badge (Huy hiệu cánh)",
-    hint: "Hero badge on the chest / Huy hiệu trước ngực",
+    label: "Wing Badge",
+    translation: "Huy hiệu cánh",
+    summaryLabel: "Wing Badge (Huy hiệu cánh)",
+    hint: "Hero badge on the chest",
     icon: "🎖",
     iconClass: "badge",
   },
   {
     id: "trail",
-    label: "Star Trail (Đuôi sao)",
-    hint: "Comet trail by the mirror / Vệt sao cạnh gương",
+    label: "Star Trail",
+    translation: "Đuôi sao",
+    summaryLabel: "Star Trail (Đuôi sao)",
+    hint: "Comet trail by the mirror",
     icon: "☄️",
     iconClass: "trail",
   },
   {
     id: "bubble",
-    label: "Speech Bubble (Khung thoại)",
-    hint: "Talking bubble nearby / Bong bóng thoại",
+    label: "Speech Bubble",
+    translation: "Khung thoại",
+    summaryLabel: "Speech Bubble (Khung thoại)",
+    hint: "Talking bubble nearby",
     icon: "💬",
     iconClass: "bubble",
   },
@@ -144,6 +160,7 @@ function renderAccessoryOptions() {
             </span>
             <span class="accessory-meta">
               <strong>${escapeHtml(item.label)}</strong>
+              <span class="accessory-translation">${escapeHtml(item.translation)}</span>
               <small>${escapeHtml(item.hint)}</small>
             </span>
           </span>
@@ -215,7 +232,7 @@ function render() {
   const readyForDecorate = hasPersonalityFields();
   const readyToGenerate = isReadyForGeneration();
   const accessoryLabel = accessories.length
-    ? accessories.map((item) => item.label).join(", ")
+    ? accessories.map((item) => item.summaryLabel).join(", ")
     : "base hero only";
 
   refs.summaryProud.forEach((node) => {
