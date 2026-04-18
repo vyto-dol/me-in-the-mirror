@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Me In The Mirror</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="background-orb orb-a"></div>
+      <div class="background-orb orb-b"></div>
+      <div class="background-orb orb-c"></div>
+
+      <section id="landingScreen" class="landing-screen panel">
+        <div class="landing-copy">
+          <p class="eyebrow">Creative Reflection Activity</p>
+          <h1>
+            Me In
+            <span class="script-word">The Mirror</span>
+          </h1>
+          <p class="lead">
+            Biến phần tự nhận diện bản thân của học viên thành một poster anh
+            hùng sống động: điền thông tin, nhập tính cách, rồi trang trí nhân
+            vật để tạo ra một hình minh hoạ có thể tải về ngay.
+          </p>
+
+          <div class="landing-highlights">
+            <article class="highlight-card">
+              <span class="highlight-number">01</span>
+              <h2>Nhập hồ sơ học viên</h2>
+              <p>Tên, code lớp và giới tính để tạo ra nhân vật phù hợp.</p>
+            </article>
+            <article class="highlight-card">
+              <span class="highlight-number">02</span>
+              <h2>Điền 3 góc nhìn</h2>
+              <p>
+                The Proud trên áo, The Myth trên gương, The Upgrade trên áo
+                choàng.
+              </p>
+            </article>
+            <article class="highlight-card">
+              <span class="highlight-number">03</span>
+              <h2>Trang trí tự do</h2>
+              <p>
+                Chọn phụ kiện để hero trong gương mang phong cách riêng của học
+                viên.
+              </p>
+            </article>
+          </div>
+
+          <div class="mini-guide">
+            <div class="mini-guide-header">
+              <span class="mini-dot mini-dot-blue"></span>
+              <strong>The Proud</strong>
+              <span>màu xanh trên áo</span>
+            </div>
+            <div class="mini-guide-header">
+              <span class="mini-dot mini-dot-dark"></span>
+              <strong>The Myth</strong>
+              <span>màu đen trên gương</span>
+            </div>
+            <div class="mini-guide-header">
+              <span class="mini-dot mini-dot-red"></span>
+              <strong>The Upgrade</strong>
+              <span>đỏ sang xanh trên áo choàng</span>
+            </div>
+          </div>
+        </div>
+
+        <form id="landingForm" class="landing-form card" novalidate>
+          <div class="step-chip">Step 1</div>
+          <h2>Tạo hồ sơ học viên</h2>
+          <p class="card-copy">
+            Khi hoàn thành bước này, app sẽ chuyển sang trang tạo poster minh
+            hoạ tương tác.
+          </p>
+
+          <label class="field-group" for="studentName">
+            <span>Tên học viên</span>
+            <input
+              id="studentName"
+              name="studentName"
+              type="text"
+              maxlength="28"
+              placeholder="Ví dụ: Minh Anh"
+              required
+            />
+          </label>
+
+          <label class="field-group" for="classCode">
+            <span>Code lớp</span>
+            <input
+              id="classCode"
+              name="classCode"
+              type="text"
+              maxlength="18"
+              placeholder="Ví dụ: A1-2026"
+              required
+            />
+          </label>
+
+          <fieldset class="field-group">
+            <legend>Giới tính của hero trong gương</legend>
+            <div class="gender-grid">
+              <label class="gender-option">
+                <input type="radio" name="gender" value="boy" checked />
+                <span class="gender-option-body">
+                  <strong>Boy Hero</strong>
+                  <small>Tóc ngắn, dáng năng động</small>
+                </span>
+              </label>
+              <label class="gender-option">
+                <input type="radio" name="gender" value="girl" />
+                <span class="gender-option-body">
+                  <strong>Girl Hero</strong>
+                  <small>Tóc dài, tạo hình mềm hơn</small>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <p id="landingError" class="error-text" hidden>
+            Vui lòng điền đủ tên học viên và code lớp.
+          </p>
+
+          <button type="submit" class="primary-button full-width">
+            Đi tới gương thần
+          </button>
+        </form>
+      </section>
+
+      <section id="builderScreen" class="builder-screen hidden">
+        <header class="builder-header">
+          <div class="builder-title">
+            <p class="eyebrow">Interactive Poster Builder</p>
+            <h2>Me In The Mirror Studio</h2>
+          </div>
+
+          <div id="studentSummary" class="student-summary"></div>
+
+          <div class="header-actions">
+            <button id="backButton" type="button" class="ghost-button">
+              Đổi học viên
+            </button>
+            <button id="randomizeButton" type="button" class="ghost-button accent">
+              Mix phụ kiện
+            </button>
+            <button id="downloadSvgButton" type="button" class="ghost-button">
+              Tải SVG
+            </button>
+            <button id="downloadPngButton" type="button" class="primary-button">
+              Tải PNG
+            </button>
+          </div>
+        </header>
+
+        <div class="builder-grid">
+          <aside class="control-panel">
+            <section class="control-card card">
+              <div class="card-head">
+                <div class="step-chip muted">Step 2</div>
+                <h3>Điền 3 góc nhìn</h3>
+              </div>
+
+              <label class="field-group" for="proudInput">
+                <span>The Proud</span>
+                <small>Điều học viên tự hào về bản thân</small>
+                <input
+                  id="proudInput"
+                  type="text"
+                  maxlength="30"
+                  placeholder="Ví dụ: organized"
+                />
+              </label>
+
+              <label class="field-group" for="mythInput">
+                <span>The Myth</span>
+                <small>Điều người khác thường hiểu lầm</small>
+                <input
+                  id="mythInput"
+                  type="text"
+                  maxlength="30"
+                  placeholder="Ví dụ: selfish"
+                />
+              </label>
+
+              <div class="upgrade-grid">
+                <label class="field-group" for="weaknessInput">
+                  <span>The Upgrade - Bad</span>
+                  <small>Điểm cần cải thiện</small>
+                  <input
+                    id="weaknessInput"
+                    type="text"
+                    maxlength="24"
+                    placeholder="Ví dụ: quiet"
+                  />
+                </label>
+
+                <label class="field-group" for="betterInput">
+                  <span>The Upgrade - Better</span>
+                  <small>Hướng thay đổi mong muốn</small>
+                  <input
+                    id="betterInput"
+                    type="text"
+                    maxlength="24"
+                    placeholder="Ví dụ: talkative"
+                  />
+                </label>
+              </div>
+            </section>
+
+            <section class="control-card card">
+              <div class="card-head">
+                <div class="step-chip muted">Step 3</div>
+                <h3>Chọn phụ kiện</h3>
+              </div>
+              <p class="card-copy">
+                Học viên có thể chọn nhiều phụ kiện cùng lúc để làm poster sinh
+                động hơn.
+              </p>
+
+              <div class="accessory-grid">
+                <label class="accessory-option">
+                  <input type="checkbox" data-accessory="visor" />
+                  <span class="accessory-option-body">
+                    <span class="accessory-swatch swatch-red"></span>
+                    <strong>Hero visor</strong>
+                    <small>Mặt nạ trung tâm</small>
+                  </span>
+                </label>
+
+                <label class="accessory-option">
+                  <input type="checkbox" data-accessory="crown" />
+                  <span class="accessory-option-body">
+                    <span class="accessory-swatch swatch-gold"></span>
+                    <strong>Power crown</strong>
+                    <small>Vương miện nổi bật</small>
+                  </span>
+                </label>
+
+                <label class="accessory-option">
+                  <input type="checkbox" data-accessory="comic" />
+                  <span class="accessory-option-body">
+                    <span class="accessory-swatch swatch-orange"></span>
+                    <strong>Comic burst</strong>
+                    <small>Khung chữ truyện tranh</small>
+                  </span>
+                </label>
+
+                <label class="accessory-option">
+                  <input type="checkbox" data-accessory="lightning" />
+                  <span class="accessory-option-body">
+                    <span class="accessory-swatch swatch-yellow"></span>
+                    <strong>Lightning bolt</strong>
+                    <small>Tia sét trên áo</small>
+                  </span>
+                </label>
+
+                <label class="accessory-option">
+                  <input type="checkbox" data-accessory="belt" />
+                  <span class="accessory-option-body">
+                    <span class="accessory-swatch swatch-sand"></span>
+                    <strong>Victory belt</strong>
+                    <small>Đai lưng chiến thắng</small>
+                  </span>
+                </label>
+
+                <label class="accessory-option">
+                  <input type="checkbox" data-accessory="badge" />
+                  <span class="accessory-option-body">
+                    <span class="accessory-swatch swatch-blue"></span>
+                    <strong>Wing badge</strong>
+                    <small>Biểu tượng trước ngực</small>
+                  </span>
+                </label>
+
+                <label class="accessory-option">
+                  <input type="checkbox" data-accessory="trail" />
+                  <span class="accessory-option-body">
+                    <span class="accessory-swatch swatch-cyan"></span>
+                    <strong>Star trail</strong>
+                    <small>Đuôi sao bên mép gương</small>
+                  </span>
+                </label>
+
+                <label class="accessory-option">
+                  <input type="checkbox" data-accessory="bubble" />
+                  <span class="accessory-option-body">
+                    <span class="accessory-swatch swatch-violet"></span>
+                    <strong>Speech bubble</strong>
+                    <small>Bong bóng lời nhắn</small>
+                  </span>
+                </label>
+              </div>
+            </section>
+
+            <section class="control-card card compact-card">
+              <h3>Cách app đặt chữ</h3>
+              <ul class="legend-list">
+                <li><span class="legend-mark mark-blue"></span> Trên áo: The Proud</li>
+                <li><span class="legend-mark mark-dark"></span> Trên gương: The Myth</li>
+                <li>
+                  <span class="legend-mark mark-red"></span> Trên áo choàng:
+                  điểm yếu
+                </li>
+                <li>
+                  <span class="legend-mark mark-blue"></span> Trên áo choàng:
+                  phiên bản tốt hơn
+                </li>
+              </ul>
+            </section>
+          </aside>
+
+          <section class="preview-panel">
+            <div class="preview-frame panel">
+              <div class="preview-meta">
+                <div>
+                  <p class="eyebrow">Live Poster Preview</p>
+                  <h3>Poster minh hoạ cập nhật theo thời gian thực</h3>
+                </div>
+                <span id="activeAccessoryCount" class="count-badge">0 phụ kiện</span>
+              </div>
+              <div id="scenePreview" class="scene-preview" aria-live="polite"></div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
