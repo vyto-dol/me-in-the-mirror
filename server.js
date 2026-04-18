@@ -9,6 +9,7 @@ const PORT = Number(process.env.PORT || 3000);
 const HOST = process.env.HOST || "0.0.0.0";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || "";
 const GEMINI_MODEL = process.env.GEMINI_IMAGE_MODEL || "gemini-2.5-flash-image";
+const APP_VERSION = process.env.APP_VERSION || Date.now().toString(36);
 
 const ACCESSORY_PROMPTS = {
   visor: "a bold red and gold hero visor mask",
@@ -257,8 +258,21 @@ async function serveStatic(urlPathname, res, headOnly) {
 
     const ext = path.extname(filePath).toLowerCase();
     const contentType = MIME_TYPES[ext] || "application/octet-stream";
+    const headers = {
+      "Content-Type": contentType,
+      "Cache-Control": "no-store, no-cache, must-revalidate",
+    };
+
+    if (path.basename(filePath) === "index.html") {
+      const html = await fs.promises.readFile(filePath, "utf8");
+      const body = html.replaceAll("__APP_VERSION__", APP_VERSION);
+      res.writeHead(200, headers);
+      res.end(headOnly ? null : body);
+      return;
+    }
+
     const data = headOnly ? null : await fs.promises.readFile(filePath);
-    res.writeHead(200, { "Content-Type": contentType });
+    res.writeHead(200, headers);
     res.end(data);
   } catch {
     json(res, 404, { error: "Not found." });
