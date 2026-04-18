@@ -10,6 +10,10 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -94,8 +98,8 @@
         <div class="screen-stack">
           <header class="screen-header">
             <div class="title-wrap">
-              <p class="eyebrow">Personality</p>
-              <h2>Me In The Mirror</h2>
+              <p class="eyebrow">Step 2</p>
+              <h2>Personality</h2>
               <a
                 class="logo-badge"
                 href="https://www.dolenglish.vn/"
@@ -117,7 +121,7 @@
                 Back
               </button>
               <button id="toDecorateButton" type="button" class="primary-button">
-                Next: Decorate
+                Next
               </button>
             </div>
           </header>
@@ -132,7 +136,7 @@
                   id="proudInput"
                   class="field-input"
                   type="text"
-                  maxlength="26"
+                  maxlength="28"
                   placeholder="Enter the proud"
                 />
               </label>
@@ -143,7 +147,7 @@
                   id="mythInput"
                   class="field-input"
                   type="text"
-                  maxlength="24"
+                  maxlength="28"
                   placeholder="Enter the myth"
                 />
               </label>
@@ -157,7 +161,7 @@
                       id="weaknessInput"
                       class="field-input"
                       type="text"
-                      maxlength="18"
+                      maxlength="20"
                       placeholder="Weakness"
                     />
                   </label>
@@ -167,7 +171,7 @@
                       id="betterInput"
                       class="field-input"
                       type="text"
-                      maxlength="18"
+                      maxlength="20"
                       placeholder="Change"
                     />
                   </label>
@@ -175,11 +179,24 @@
               </div>
             </aside>
 
-            <section class="glass-card preview-card">
-              <div class="preview-meta">
-                <span class="preview-chip">Live Preview</span>
+            <section class="glass-card summary-card">
+              <div class="mini-stack">
+                <span class="preview-chip">Prompt Summary</span>
+                <div class="summary-sheet">
+                  <div class="summary-line">
+                    <strong>The Proud</strong>
+                    <span data-summary-proud></span>
+                  </div>
+                  <div class="summary-line">
+                    <strong>The Myth</strong>
+                    <span data-summary-myth></span>
+                  </div>
+                  <div class="summary-line">
+                    <strong>The Upgrade</strong>
+                    <span data-summary-upgrade></span>
+                  </div>
+                </div>
               </div>
-              <div class="scene-preview" data-scene-preview aria-live="polite"></div>
             </section>
           </div>
         </div>
@@ -189,8 +206,8 @@
         <div class="screen-stack">
           <header class="screen-header">
             <div class="title-wrap">
-              <p class="eyebrow">Decorate</p>
-              <h2>Me In The Mirror</h2>
+              <p class="eyebrow">Step 3</p>
+              <h2>Decorate</h2>
               <a
                 class="logo-badge"
                 href="https://www.dolenglish.vn/"
@@ -211,14 +228,8 @@
               <button id="decorateBackButton" type="button" class="subtle-button">
                 Back
               </button>
-              <button id="randomizeButton" type="button" class="accent-button">
-                Mix Accessories
-              </button>
-              <button id="downloadSvgButton" type="button" class="subtle-button">
-                Download SVG
-              </button>
-              <button id="downloadPngButton" type="button" class="primary-button">
-                Download PNG
+              <button id="generateButton" type="button" class="accent-button">
+                Generate Image
               </button>
             </div>
           </header>
@@ -232,82 +243,61 @@
                 <span class="count-badge" data-accessory-count>0 accessories</span>
               </div>
 
-              <div class="accessory-grid">
-                <label class="accessory-option">
-                  <input type="checkbox" data-accessory="visor" />
-                  <span class="accessory-card">
-                    <i class="swatch swatch-red"></i>
-                    <strong>Hero visor</strong>
-                  </span>
-                </label>
-
-                <label class="accessory-option">
-                  <input type="checkbox" data-accessory="crown" />
-                  <span class="accessory-card">
-                    <i class="swatch swatch-gold"></i>
-                    <strong>Power crown</strong>
-                  </span>
-                </label>
-
-                <label class="accessory-option">
-                  <input type="checkbox" data-accessory="comic" />
-                  <span class="accessory-card">
-                    <i class="swatch swatch-orange"></i>
-                    <strong>Comic burst</strong>
-                  </span>
-                </label>
-
-                <label class="accessory-option">
-                  <input type="checkbox" data-accessory="lightning" />
-                  <span class="accessory-card">
-                    <i class="swatch swatch-yellow"></i>
-                    <strong>Lightning bolt</strong>
-                  </span>
-                </label>
-
-                <label class="accessory-option">
-                  <input type="checkbox" data-accessory="belt" />
-                  <span class="accessory-card">
-                    <i class="swatch swatch-sand"></i>
-                    <strong>Victory belt</strong>
-                  </span>
-                </label>
-
-                <label class="accessory-option">
-                  <input type="checkbox" data-accessory="badge" />
-                  <span class="accessory-card">
-                    <i class="swatch swatch-blue"></i>
-                    <strong>Wing badge</strong>
-                  </span>
-                </label>
-
-                <label class="accessory-option">
-                  <input type="checkbox" data-accessory="trail" />
-                  <span class="accessory-card">
-                    <i class="swatch swatch-cyan"></i>
-                    <strong>Star trail</strong>
-                  </span>
-                </label>
-
-                <label class="accessory-option">
-                  <input type="checkbox" data-accessory="bubble" />
-                  <span class="accessory-card">
-                    <i class="swatch swatch-violet"></i>
-                    <strong>Speech bubble</strong>
-                  </span>
-                </label>
-              </div>
-
-              <button id="startOverButton" type="button" class="subtle-button subtle-button-wide">
-                Start Over
-              </button>
+              <div id="accessoryGrid" class="accessory-grid"></div>
             </aside>
 
-            <section class="glass-card preview-card">
-              <div class="preview-meta">
-                <span class="preview-chip">Live Preview</span>
+            <section class="glass-card result-card">
+              <div class="result-head">
+                <span class="preview-chip">Gemini Result</span>
+                <span id="generationStatus" class="status-badge">Ready</span>
               </div>
-              <div class="scene-preview" data-scene-preview aria-live="polite"></div>
+
+              <p id="generationError" class="error-text hidden"></p>
+
+              <div id="resultStage" class="result-stage">
+                <div id="emptyState" class="empty-state">
+                  <strong>Generate after all choices are done.</strong>
+                  <span>Gemini will create the hero art, the text, and the accessories directly in one image.</span>
+                </div>
+
+                <div id="loadingState" class="loading-state hidden">
+                  <div class="spinner"></div>
+                  <span>Gemini is drawing the final image...</span>
+                </div>
+
+                <div id="posterFrame" class="poster-frame hidden">
+                  <img id="generatedImage" class="generated-image" alt="Generated illustration" />
+                </div>
+              </div>
+
+              <div id="downloadPanel" class="download-panel hidden">
+                <div class="download-copy">
+                  <strong>Your poster is ready</strong>
+                  <span>Tap below to save the image for your class activity.</span>
+                </div>
+                <button id="downloadPosterButton" type="button" class="primary-button download-button">
+                  Download Poster
+                </button>
+              </div>
+
+              <div class="summary-sheet">
+                <div class="summary-line">
+                  <strong>The Proud</strong>
+                  <span data-summary-proud></span>
+                </div>
+                <div class="summary-line">
+                  <strong>The Myth</strong>
+                  <span data-summary-myth></span>
+                </div>
+                <div class="summary-line">
+                  <strong>The Upgrade</strong>
+                  <span data-summary-upgrade></span>
+                </div>
+                <div class="summary-line">
+                  <strong>Accessories</strong>
+                  <span data-summary-accessories></span>
+                </div>
+              </div>
             </section>
           </div>
         </div>
