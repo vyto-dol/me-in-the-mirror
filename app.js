@@ -11,14 +11,15 @@ const accessoryCatalog = [
 
 const placeholderCopy = {
   proud: "organized",
-  myth: "selfish",
+  myth: "misunderstood",
   weakness: "quiet",
-  better: "talkative",
+  better: "confident",
 };
 
 const refs = {
   landingScreen: document.getElementById("landingScreen"),
-  builderScreen: document.getElementById("builderScreen"),
+  personalityScreen: document.getElementById("personalityScreen"),
+  decorateScreen: document.getElementById("decorateScreen"),
   landingForm: document.getElementById("landingForm"),
   studentName: document.getElementById("studentName"),
   classCode: document.getElementById("classCode"),
@@ -27,17 +28,21 @@ const refs = {
   mythInput: document.getElementById("mythInput"),
   weaknessInput: document.getElementById("weaknessInput"),
   betterInput: document.getElementById("betterInput"),
-  studentSummary: document.getElementById("studentSummary"),
-  activeAccessoryCount: document.getElementById("activeAccessoryCount"),
-  scenePreview: document.getElementById("scenePreview"),
-  backButton: document.getElementById("backButton"),
+  personalityBackButton: document.getElementById("personalityBackButton"),
+  toDecorateButton: document.getElementById("toDecorateButton"),
+  decorateBackButton: document.getElementById("decorateBackButton"),
   randomizeButton: document.getElementById("randomizeButton"),
   downloadSvgButton: document.getElementById("downloadSvgButton"),
   downloadPngButton: document.getElementById("downloadPngButton"),
+  startOverButton: document.getElementById("startOverButton"),
+  studentSummaryRows: Array.from(document.querySelectorAll("[data-student-summary]")),
+  scenePreviews: Array.from(document.querySelectorAll("[data-scene-preview]")),
+  accessoryCounts: Array.from(document.querySelectorAll("[data-accessory-count]")),
   accessoryInputs: Array.from(document.querySelectorAll("[data-accessory]")),
 };
 
 const state = {
+  currentScreen: "landing",
   student: {
     name: "",
     classCode: "",
@@ -58,10 +63,13 @@ function init() {
   refs.mythInput.addEventListener("input", handleFieldInput);
   refs.weaknessInput.addEventListener("input", handleFieldInput);
   refs.betterInput.addEventListener("input", handleFieldInput);
-  refs.backButton.addEventListener("click", goBackToLanding);
+  refs.personalityBackButton.addEventListener("click", () => showScreen("landing"));
+  refs.toDecorateButton.addEventListener("click", () => showScreen("decorate"));
+  refs.decorateBackButton.addEventListener("click", () => showScreen("personality"));
   refs.randomizeButton.addEventListener("click", randomizeAccessories);
   refs.downloadSvgButton.addEventListener("click", () => downloadScene("svg"));
   refs.downloadPngButton.addEventListener("click", () => downloadScene("png"));
+  refs.startOverButton.addEventListener("click", resetApplication);
 
   refs.accessoryInputs.forEach((input) => {
     input.addEventListener("change", () => {
@@ -73,6 +81,8 @@ function init() {
       renderApp();
     });
   });
+
+  renderApp();
 }
 
 function handleLandingSubmit(event) {
@@ -92,11 +102,8 @@ function handleLandingSubmit(event) {
   state.student.name = name.slice(0, 28);
   state.student.classCode = classCode.slice(0, 18).toUpperCase();
   state.student.gender = gender;
-
-  refs.landingScreen.classList.add("hidden");
-  refs.builderScreen.classList.remove("hidden");
+  showScreen("personality");
   renderApp();
-  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function handleFieldInput() {
@@ -107,19 +114,61 @@ function handleFieldInput() {
   renderApp();
 }
 
-function goBackToLanding() {
-  refs.builderScreen.classList.add("hidden");
-  refs.landingScreen.classList.remove("hidden");
-  refs.studentName.focus();
+function showScreen(screen) {
+  state.currentScreen = screen;
+  refs.landingScreen.classList.toggle("hidden", screen !== "landing");
+  refs.personalityScreen.classList.toggle("hidden", screen !== "personality");
+  refs.decorateScreen.classList.toggle("hidden", screen !== "decorate");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function resetApplication() {
+  state.currentScreen = "landing";
+  state.student = {
+    name: "",
+    classCode: "",
+    gender: "boy",
+  };
+  state.proud = "";
+  state.myth = "";
+  state.weakness = "";
+  state.better = "";
+  state.accessories = new Set();
+
+  refs.landingForm.reset();
+  refs.proudInput.value = "";
+  refs.mythInput.value = "";
+  refs.weaknessInput.value = "";
+  refs.betterInput.value = "";
+  refs.accessoryInputs.forEach((input) => {
+    input.checked = false;
+  });
+  refs.landingError.hidden = true;
+  renderApp();
+  showScreen("landing");
 }
 
 function renderApp() {
-  refs.studentSummary.innerHTML = buildStudentSummary();
-  refs.activeAccessoryCount.textContent = `${state.accessories.size} phụ kiện`;
-  refs.scenePreview.innerHTML = buildSceneSvg();
+  const summaryMarkup = buildStudentSummary();
+  refs.studentSummaryRows.forEach((row) => {
+    row.innerHTML = summaryMarkup;
+  });
+
+  refs.accessoryCounts.forEach((badge) => {
+    badge.textContent = `${state.accessories.size} accessories`;
+  });
+
+  const sceneMarkup = buildSceneSvg();
+  refs.scenePreviews.forEach((preview) => {
+    preview.innerHTML = sceneMarkup;
+  });
 }
 
 function buildStudentSummary() {
+  if (!state.student.name || !state.student.classCode) {
+    return "";
+  }
+
   const genderLabel = state.student.gender === "girl" ? "Girl Hero" : "Boy Hero";
 
   return [
@@ -143,48 +192,68 @@ function buildSceneSvg() {
   const myth = getDisplayText("myth");
   const weakness = getDisplayText("weakness");
   const better = getDisplayText("better");
-  const accessoryLabels = accessoryCatalog
-    .filter((item) => state.accessories.has(item.id))
-    .map((item) => item.label);
 
-  const proudLines = wrapText(proud.value, 16, 2);
-  const mythLines = wrapText(myth.value, 14, 2);
-  const weaknessLines = wrapText(weakness.value, 12, 2);
-  const betterLines = wrapText(better.value, 13, 2);
-  const studentNameLines = wrapText(state.student.name || "Student", 16, 2);
-  const heroCallout = buildHeroCallout();
+  const proudLayout = fitTextLayout(proud.value, {
+    maxChars: 12,
+    maxLines: 2,
+    baseSize: 29,
+    minSize: 18,
+  });
+  const mythLayout = fitTextLayout(myth.value, {
+    maxChars: 11,
+    maxLines: 2,
+    baseSize: 36,
+    minSize: 20,
+  });
+  const weaknessLayout = fitTextLayout(weakness.value, {
+    maxChars: 10,
+    maxLines: 2,
+    baseSize: 24,
+    minSize: 16,
+  });
+  const betterLayout = fitTextLayout(better.value, {
+    maxChars: 10,
+    maxLines: 2,
+    baseSize: 28,
+    minSize: 18,
+  });
+  const studentLabel = `${state.student.name || "Student"} • ${state.student.classCode || "Class"}`;
 
   return `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 820" role="img" aria-label="Me In The Mirror poster for ${escapeHtml(state.student.name)}">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 820" role="img" aria-label="Me In The Mirror poster for ${escapeHtml(state.student.name || "student")}">
       <defs>
-        <linearGradient id="posterBg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#fffaf2" />
-          <stop offset="100%" stop-color="#fff2e1" />
+        <linearGradient id="posterBase" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="100%" stop-color="#fff8f6" />
         </linearGradient>
-        <linearGradient id="bannerGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#f43e3e" />
-          <stop offset="100%" stop-color="#ff772d" />
+        <linearGradient id="accentRed" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#D42525" />
+          <stop offset="100%" stop-color="#FF7C62" />
+        </linearGradient>
+        <linearGradient id="accentBlue" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#0C82CB" />
+          <stop offset="100%" stop-color="#1AC2F5" />
         </linearGradient>
         <linearGradient id="mirrorFrame" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#ffcd78" />
-          <stop offset="100%" stop-color="#ff9e3d" />
+          <stop offset="0%" stop-color="#ffd97c" />
+          <stop offset="100%" stop-color="#ffa13b" />
         </linearGradient>
         <linearGradient id="mirrorGlass" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#fbfdff" />
-          <stop offset="60%" stop-color="#e7ecff" />
-          <stop offset="100%" stop-color="#dff5ff" />
+          <stop offset="0%" stop-color="#f9fcff" />
+          <stop offset="55%" stop-color="#eef2ff" />
+          <stop offset="100%" stop-color="#def6ff" />
         </linearGradient>
         <linearGradient id="studentSkin" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#3758d2" />
-          <stop offset="100%" stop-color="#213f8e" />
+          <stop offset="0%" stop-color="#3159D2" />
+          <stop offset="100%" stop-color="#17398F" />
         </linearGradient>
         <linearGradient id="studentShirt" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#3756ff" />
-          <stop offset="100%" stop-color="#3b2cb5" />
+          <stop offset="0%" stop-color="#2A62FF" />
+          <stop offset="100%" stop-color="#2D2BB2" />
         </linearGradient>
         <linearGradient id="capeGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#fff5fb" />
-          <stop offset="100%" stop-color="#ffe0ec" />
+          <stop offset="0%" stop-color="#fffafc" />
+          <stop offset="100%" stop-color="#ffe3ec" />
         </linearGradient>
         <linearGradient id="visorGold" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stop-color="#ffe67a" />
@@ -203,186 +272,154 @@ function buildSceneSvg() {
           <stop offset="100%" stop-color="#5a7ce6" />
         </linearGradient>
         <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#31223c" flood-opacity="0.16" />
+          <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#0F172A" flood-opacity="0.12" />
         </filter>
         <clipPath id="mirrorClip">
-          <path d="M418 696 V178 C418 121 460 88 526 88 H578 C644 88 688 121 688 178 V696 Z" />
+          <path d="M430 694 V180 C430 122 472 90 538 90 H590 C656 90 700 122 700 180 V694 Z" />
         </clipPath>
       </defs>
 
-      <rect width="1280" height="820" fill="#fffdf8" />
-      <rect x="16" y="16" width="1248" height="788" rx="34" fill="url(#posterBg)" stroke="#f1452f" stroke-width="10" />
-      <rect x="16" y="16" width="1248" height="74" rx="34" fill="url(#bannerGrad)" />
-      <text x="48" y="64" fill="#ffffff" font-size="46" font-weight="900" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">01 | ME IN THE MIRROR</text>
+      <rect width="1280" height="820" fill="#F8FAFC" />
+      <rect x="20" y="20" width="1240" height="780" rx="38" fill="url(#posterBase)" stroke="#E2E8F0" stroke-width="2" />
 
-      <g transform="translate(44 112)">
-        <rect x="0" y="0" width="744" height="650" rx="30" fill="rgba(255,255,255,0.65)" stroke="rgba(241, 69, 47, 0.12)" />
-        <rect x="40" y="42" width="214" height="610" rx="28" fill="url(#studentShirt)" opacity="0.78" />
-        <g opacity="0.8">
-          <path d="M98 86 l30 -28" stroke="#7257c8" stroke-width="6" stroke-linecap="round" />
-          <path d="M91 77 c18 -13 35 5 26 18 c-8 11 -28 0 -26 -18 z" fill="none" stroke="#7257c8" stroke-width="4" />
-          <path d="M117 165 l54 30" stroke="#c0dcff" stroke-width="12" stroke-linecap="round" />
-          <circle cx="176" cy="196" r="20" fill="none" stroke="#c0dcff" stroke-width="10" />
-          <path d="M96 246 l28 -28" stroke="#504ee3" stroke-width="6" stroke-linecap="round" />
-          <path d="M90 236 c18 -13 35 5 26 18 c-8 11 -28 0 -26 -18 z" fill="none" stroke="#504ee3" stroke-width="4" />
-          <path d="M78 504 l40 22" stroke="#5240cf" stroke-width="12" stroke-linecap="round" />
-          <path d="M132 548 l30 -30" stroke="#6f5cf0" stroke-width="10" stroke-linecap="round" />
+      <circle cx="170" cy="158" r="120" fill="#D42525" opacity="0.06" />
+      <circle cx="1110" cy="134" r="108" fill="#0C82CB" opacity="0.08" />
+      <circle cx="1040" cy="730" r="140" fill="#1AC2F5" opacity="0.05" />
+
+      <g transform="translate(56 56)">
+        <rect x="0" y="0" width="288" height="54" rx="27" fill="rgba(255,255,255,0.88)" stroke="#E2E8F0" />
+        <text x="24" y="35" fill="#0F172A" font-size="22" font-weight="800" font-family="Inter, sans-serif">${escapeHtml(
+          studentLabel,
+        )}</text>
+      </g>
+
+      <g transform="translate(950 62)">
+        <text x="0" y="74" fill="#0F172A" font-size="64" font-weight="900" font-family="Inter, sans-serif">Me In</text>
+        <text x="0" y="136" fill="#D42525" font-size="72" font-weight="900" font-family="Inter, sans-serif" letter-spacing="-2">The Mirror</text>
+      </g>
+
+      <g transform="translate(60 118)">
+        <rect x="0" y="0" width="848" height="648" rx="34" fill="rgba(255,255,255,0.74)" stroke="rgba(226,232,240,0.9)" />
+        <rect x="32" y="36" width="228" height="596" rx="30" fill="url(#accentBlue)" opacity="0.22" />
+        <g opacity="0.62">
+          <path d="M102 94 l28 -28" stroke="#7C74FF" stroke-width="6" stroke-linecap="round" />
+          <path d="M96 84 c18 -13 35 5 26 18 c-8 11 -28 0 -26 -18 z" fill="none" stroke="#7C74FF" stroke-width="4" />
+          <path d="M124 166 l58 34" stroke="#C7E7FF" stroke-width="12" stroke-linecap="round" />
+          <circle cx="188" cy="204" r="20" fill="none" stroke="#C7E7FF" stroke-width="10" />
+          <path d="M88 246 l26 -24" stroke="#5C56EC" stroke-width="6" stroke-linecap="round" />
+          <path d="M84 238 c18 -13 35 5 26 18 c-8 11 -28 0 -26 -18 z" fill="none" stroke="#5C56EC" stroke-width="4" />
+          <path d="M80 514 l44 24" stroke="#6053DA" stroke-width="12" stroke-linecap="round" />
+          <path d="M138 558 l30 -30" stroke="#7B6AF4" stroke-width="10" stroke-linecap="round" />
         </g>
 
-        <path d="M394 708 V176 C394 102 450 56 530 56 H578 C658 56 714 102 714 176 V708 Z" fill="url(#mirrorFrame)" filter="url(#softShadow)" />
-        <path d="M418 696 V178 C418 121 460 88 526 88 H578 C644 88 688 121 688 178 V696 Z" fill="url(#mirrorGlass)" />
-        <g opacity="0.52">
-          <path d="M469 92 L552 694" stroke="#ffffff" stroke-width="22" />
-          <path d="M566 98 L654 702" stroke="#ffffff" stroke-width="16" />
+        <path d="M408 706 V176 C408 104 464 58 542 58 H592 C670 58 726 104 726 176 V706 Z" fill="url(#mirrorFrame)" filter="url(#softShadow)" />
+        <path d="M430 694 V180 C430 122 472 90 538 90 H590 C656 90 700 122 700 180 V694 Z" fill="url(#mirrorGlass)" />
+        <g opacity="0.5">
+          <path d="M480 92 L560 696" stroke="#ffffff" stroke-width="22" />
+          <path d="M575 98 L664 698" stroke="#ffffff" stroke-width="14" />
         </g>
 
         <g clip-path="url(#mirrorClip)">
-          <rect x="418" y="88" width="270" height="608" fill="rgba(255,255,255,0.08)" />
-          <circle cx="676" cy="126" r="160" fill="rgba(255,255,255,0.18)" />
-          <path d="M690 312 c48 18 80 46 114 92" fill="none" stroke="#d82438" stroke-width="4" />
-          <path d="M674 342 c62 14 108 48 144 112" fill="none" stroke="#d82438" stroke-width="4" />
+          <rect x="430" y="90" width="270" height="604" fill="rgba(255,255,255,0.08)" />
+          <circle cx="690" cy="126" r="170" fill="rgba(255,255,255,0.18)" />
+          <path d="M698 316 c42 16 74 44 102 90" fill="none" stroke="#D42525" stroke-width="4" opacity="0.9" />
+          <path d="M684 344 c58 18 104 52 138 116" fill="none" stroke="#D42525" stroke-width="4" opacity="0.9" />
           ${renderTextBlock({
-            lines: mythLines,
-            x: 654,
-            y: 158,
-            color: "#121212",
-            size: 38,
+            lines: mythLayout.lines,
+            x: 646,
+            y: 162,
+            color: "#111827",
+            size: mythLayout.size,
             family: "'Snell Roundhand', 'Brush Script MT', cursive",
             anchor: "start",
-            opacity: myth.placeholder ? 0.42 : 1,
+            opacity: myth.placeholder ? 0.45 : 1,
           })}
-          ${renderHero(state.student.gender, proudLines, weaknessLines, betterLines, proud.placeholder, weakness.placeholder, better.placeholder)}
-          ${renderSceneAccessories(heroCallout)}
+          ${renderHero({
+            gender: state.student.gender,
+            proudLayout,
+            weaknessLayout,
+            betterLayout,
+            proudPlaceholder: proud.placeholder,
+            weaknessPlaceholder: weakness.placeholder,
+            betterPlaceholder: better.placeholder,
+          })}
+          ${renderSceneAccessories()}
         </g>
 
         ${renderStudentBlob()}
       </g>
 
-      <g transform="translate(818 118)">
-        <text x="0" y="120" fill="#ff7e29" font-size="92" font-family="'Snell Roundhand', 'Brush Script MT', cursive">Me In</text>
-        <text x="0" y="210" fill="#ff7e29" font-size="92" font-family="'Snell Roundhand', 'Brush Script MT', cursive">The Mirror</text>
-
-        <g transform="translate(0 250)">
-          <rect x="0" y="0" width="406" height="118" rx="26" fill="rgba(255,255,255,0.9)" stroke="rgba(32,24,36,0.12)" />
-          <text x="26" y="34" fill="#d63c44" font-size="18" font-weight="900" font-family="'Avenir Next', 'Trebuchet MS', sans-serif" letter-spacing="1.5">STUDENT PROFILE</text>
-          ${renderTextBlock({
-            lines: studentNameLines,
-            x: 26,
-            y: 74,
-            color: "#201824",
-            size: 28,
-            family: "'Avenir Next', 'Trebuchet MS', sans-serif",
-            weight: 800,
-          })}
-          <text x="26" y="102" fill="#6b6574" font-size="20" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">${escapeHtml(
-            state.student.classCode,
-          )} • ${state.student.gender === "girl" ? "Girl Hero" : "Boy Hero"}</text>
-        </g>
-
-        <g transform="translate(0 392)">
-          <rect x="0" y="0" width="406" height="196" rx="26" fill="rgba(255,255,255,0.9)" stroke="rgba(32,24,36,0.12)" />
-          <text x="28" y="34" fill="#201824" font-size="22" font-weight="800" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">How the words map</text>
-          <circle cx="28" cy="68" r="8" fill="#3467d8" />
-          <text x="48" y="74" fill="#201824" font-size="18" font-weight="700" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">The Proud</text>
-          <text x="176" y="74" fill="#3467d8" font-size="18" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">${escapeHtml(
-            proud.value,
-          )}</text>
-          <text x="48" y="98" fill="#6b6574" font-size="16" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">Viết trên áo bằng màu xanh.</text>
-
-          <circle cx="28" cy="128" r="8" fill="#17141a" />
-          <text x="48" y="134" fill="#201824" font-size="18" font-weight="700" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">The Myth</text>
-          <text x="170" y="134" fill="#17141a" font-size="18" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">${escapeHtml(
-            myth.value,
-          )}</text>
-          <text x="48" y="158" fill="#6b6574" font-size="16" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">Viết trên gương bằng màu đen.</text>
-
-          <circle cx="28" cy="188" r="8" fill="#ef5a48" />
-          <text x="48" y="194" fill="#201824" font-size="18" font-weight="700" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">The Upgrade</text>
-          <text x="196" y="194" fill="#ef5a48" font-size="18" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">${escapeHtml(
-            weakness.value,
-          )}</text>
-          <text x="262" y="194" fill="#201824" font-size="18" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">→</text>
-          <text x="282" y="194" fill="#3467d8" font-size="18" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">${escapeHtml(
-            better.value,
-          )}</text>
-        </g>
-
-        <g transform="translate(0 610)">
-          <rect x="0" y="0" width="406" height="130" rx="26" fill="rgba(255,255,255,0.9)" stroke="rgba(32,24,36,0.12)" />
-          <text x="28" y="34" fill="#201824" font-size="22" font-weight="800" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">Accessories</text>
-          ${renderAccessoryPills(accessoryLabels)}
-        </g>
-      </g>
+      ${renderDolMark(60, 724, 1.22)}
     </svg>
   `;
 }
 
-function renderHero(
+function renderHero({
   gender,
-  proudLines,
-  weaknessLines,
-  betterLines,
+  proudLayout,
+  weaknessLayout,
+  betterLayout,
   proudPlaceholder,
   weaknessPlaceholder,
   betterPlaceholder,
-) {
+}) {
   const hair = gender === "girl" ? renderGirlHair() : renderBoyHair();
 
   return `
     <g transform="translate(0 10)">
-      <path d="M515 446 C546 425 626 425 657 446 L719 703 C650 732 524 734 452 703 Z" fill="url(#capeGradient)" stroke="#d42743" stroke-width="4" />
-      <path d="M520 445 C552 432 619 432 649 445" fill="none" stroke="#d42743" stroke-width="4" />
-      <path d="M517 460 c26 -18 52 -26 72 -24 c22 0 44 8 76 24" fill="none" stroke="#d42743" stroke-width="4" />
+      <path d="M527 448 C558 427 638 427 669 448 L731 703 C662 734 536 736 464 703 Z" fill="url(#capeGradient)" stroke="#D42525" stroke-width="4" />
+      <path d="M532 448 C564 434 631 434 661 448" fill="none" stroke="#D42525" stroke-width="4" />
+      <path d="M529 462 c26 -18 52 -26 72 -24 c22 0 44 8 76 24" fill="none" stroke="#D42525" stroke-width="4" />
 
       ${hair.back}
-      <ellipse cx="585" cy="350" rx="94" ry="112" fill="#fffdfb" stroke="#201824" stroke-width="4" />
-      <path d="M523 447 Q585 430 647 447 L629 708 Q585 729 541 708 Z" fill="#fffdfb" stroke="#201824" stroke-width="4" />
-      <path d="M520 487 C468 535 459 607 475 655 L513 640 C500 592 507 548 543 508 Z" fill="#fffdfb" stroke="#201824" stroke-width="4" />
-      <path d="M650 487 C702 535 711 607 695 655 L657 640 C670 592 663 548 627 508 Z" fill="#fffdfb" stroke="#201824" stroke-width="4" />
-      <path d="M534 690 C556 706 612 708 636 690" fill="none" stroke="#201824" stroke-width="4" stroke-linecap="round" />
-      <path d="M519 651 c-15 15 -34 24 -52 28" fill="none" stroke="#201824" stroke-width="4" stroke-linecap="round" />
-      <path d="M651 651 c15 15 34 24 52 28" fill="none" stroke="#201824" stroke-width="4" stroke-linecap="round" />
-      <ellipse cx="553" cy="351" rx="14" ry="26" fill="#1b1120" />
-      <ellipse cx="611" cy="351" rx="14" ry="26" fill="#1b1120" />
-      <path d="M548 412 C569 428 603 428 624 412" fill="none" stroke="#1b1120" stroke-width="4" stroke-linecap="round" />
-      <path d="M517 450 l25 -20 l42 18" fill="none" stroke="#d42743" stroke-width="4" stroke-linecap="round" />
-      <path d="M654 450 l-25 -20 l-42 18" fill="none" stroke="#d42743" stroke-width="4" stroke-linecap="round" />
-      <path d="M560 430 c10 22 40 22 50 0" fill="none" stroke="#d42743" stroke-width="4" stroke-linecap="round" />
-      <rect x="573" y="427" width="24" height="20" rx="8" fill="#fffdfb" stroke="#d42743" stroke-width="4" />
+      <ellipse cx="597" cy="350" rx="94" ry="112" fill="#FFFDFB" stroke="#111827" stroke-width="4" />
+      <path d="M535 449 Q597 432 659 449 L641 708 Q597 729 553 708 Z" fill="#FFFDFB" stroke="#111827" stroke-width="4" />
+      <path d="M532 489 C480 537 471 607 487 655 L525 640 C512 592 519 548 555 508 Z" fill="#FFFDFB" stroke="#111827" stroke-width="4" />
+      <path d="M662 489 C714 537 723 607 707 655 L669 640 C682 592 675 548 639 508 Z" fill="#FFFDFB" stroke="#111827" stroke-width="4" />
+      <path d="M546 690 C568 706 624 708 648 690" fill="none" stroke="#111827" stroke-width="4" stroke-linecap="round" />
+      <path d="M531 651 c-15 15 -34 24 -52 28" fill="none" stroke="#111827" stroke-width="4" stroke-linecap="round" />
+      <path d="M663 651 c15 15 34 24 52 28" fill="none" stroke="#111827" stroke-width="4" stroke-linecap="round" />
+      <ellipse cx="565" cy="351" rx="14" ry="26" fill="#1B1120" />
+      <ellipse cx="623" cy="351" rx="14" ry="26" fill="#1B1120" />
+      <path d="M560 412 C581 428 615 428 636 412" fill="none" stroke="#1B1120" stroke-width="4" stroke-linecap="round" />
+      <path d="M529 452 l25 -20 l42 18" fill="none" stroke="#D42525" stroke-width="4" stroke-linecap="round" />
+      <path d="M666 452 l-25 -20 l-42 18" fill="none" stroke="#D42525" stroke-width="4" stroke-linecap="round" />
+      <path d="M572 432 c10 22 40 22 50 0" fill="none" stroke="#D42525" stroke-width="4" stroke-linecap="round" />
+      <rect x="585" y="429" width="24" height="20" rx="8" fill="#FFFDFB" stroke="#D42525" stroke-width="4" />
       ${hair.front}
 
       ${renderTextBlock({
-        lines: proudLines,
-        x: 585,
-        y: 550,
-        color: "#3467d8",
-        size: 26,
+        lines: proudLayout.lines,
+        x: 597,
+        y: 548,
+        color: "#0C82CB",
+        size: proudLayout.size,
         family: "'Snell Roundhand', 'Brush Script MT', cursive",
         anchor: "middle",
         opacity: proudPlaceholder ? 0.46 : 1,
       })}
 
       ${renderTextBlock({
-        lines: weaknessLines,
-        x: 646,
-        y: 662,
-        color: "#ef5a48",
-        size: 25,
+        lines: weaknessLayout.lines,
+        x: 644,
+        y: 646,
+        color: "#D42525",
+        size: weaknessLayout.size,
         family: "'Snell Roundhand', 'Brush Script MT', cursive",
-        anchor: "start",
-        rotate: -3,
+        anchor: "middle",
+        rotate: -8,
         opacity: weaknessPlaceholder ? 0.46 : 1,
       })}
-      <text x="645" y="710" fill="#201824" font-size="30" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">⇒</text>
+      <text x="644" y="688" fill="#111827" font-size="28" font-family="Inter, sans-serif" font-weight="800">→</text>
       ${renderTextBlock({
-        lines: betterLines,
-        x: 674,
-        y: 704,
-        color: "#3467d8",
-        size: 30,
+        lines: betterLayout.lines,
+        x: 676,
+        y: 690,
+        color: "#0C82CB",
+        size: betterLayout.size,
         family: "'Snell Roundhand', 'Brush Script MT', cursive",
         anchor: "start",
-        rotate: -3,
+        rotate: -6,
         opacity: betterPlaceholder ? 0.46 : 1,
       })}
     </g>
@@ -392,12 +429,12 @@ function renderHero(
 function renderBoyHair() {
   return {
     back: `
-      <path d="M492 310 C500 254 551 226 617 236 C672 245 697 287 686 350 C666 322 627 301 585 301 C544 301 514 314 492 347 Z" fill="#1b1722" />
+      <path d="M504 310 C512 254 563 226 629 236 C684 245 709 287 698 350 C678 322 639 301 597 301 C556 301 526 314 504 347 Z" fill="#181A22" />
     `,
     front: `
-      <path d="M507 295 C523 248 579 226 638 240 C675 249 691 278 689 309 C655 294 619 287 584 286 C552 286 526 288 507 295 Z" fill="#1b1722" />
-      <path d="M520 284 C542 262 570 254 600 257" fill="none" stroke="#8a5531" stroke-width="3" stroke-linecap="round" />
-      <path d="M579 253 C603 246 629 247 653 260" fill="none" stroke="#8a5531" stroke-width="3" stroke-linecap="round" />
+      <path d="M519 295 C535 248 591 226 650 240 C687 249 703 278 701 309 C667 294 631 287 596 286 C564 286 538 288 519 295 Z" fill="#181A22" />
+      <path d="M532 284 C554 262 582 254 612 257" fill="none" stroke="#8A5531" stroke-width="3" stroke-linecap="round" />
+      <path d="M591 253 C615 246 641 247 665 260" fill="none" stroke="#8A5531" stroke-width="3" stroke-linecap="round" />
     `,
   };
 }
@@ -405,89 +442,87 @@ function renderBoyHair() {
 function renderGirlHair() {
   return {
     back: `
-      <path d="M655 275 C715 278 748 332 728 424 C715 488 718 586 692 629 C674 661 646 678 617 673 C641 625 651 561 650 504 C648 405 620 315 560 258 C585 241 623 239 655 275 Z" fill="#f0a13c" />
-      <path d="M530 263 C566 228 631 228 666 264 C644 253 617 247 591 247 C566 247 544 251 530 263 Z" fill="#f3b44d" />
+      <path d="M667 275 C727 278 760 332 740 424 C727 488 730 586 704 629 C686 661 658 678 629 673 C653 625 663 561 662 504 C660 405 632 315 572 258 C597 241 635 239 667 275 Z" fill="#F0A13C" />
+      <path d="M542 263 C578 228 643 228 678 264 C656 253 629 247 603 247 C578 247 556 251 542 263 Z" fill="#F3B44D" />
     `,
     front: `
-      <path d="M517 304 C523 248 574 228 629 240 C657 247 681 264 690 312 C673 290 646 277 617 273 C586 268 551 276 517 304 Z" fill="#f3b44d" />
-      <path d="M520 286 C541 266 570 257 598 260" fill="none" stroke="#ffcf82" stroke-width="3" stroke-linecap="round" />
-      <path d="M571 253 C599 246 628 251 653 267" fill="none" stroke="#ffcf82" stroke-width="3" stroke-linecap="round" />
+      <path d="M529 304 C535 248 586 228 641 240 C669 247 693 264 702 312 C685 290 658 277 629 273 C598 268 563 276 529 304 Z" fill="#F3B44D" />
+      <path d="M532 286 C553 266 582 257 610 260" fill="none" stroke="#FFCF82" stroke-width="3" stroke-linecap="round" />
+      <path d="M583 253 C611 246 640 251 665 267" fill="none" stroke="#FFCF82" stroke-width="3" stroke-linecap="round" />
     `,
   };
 }
 
-function renderSceneAccessories(heroCallout) {
+function renderSceneAccessories() {
   const parts = [];
 
   if (state.accessories.has("comic")) {
     parts.push(`
-      <g transform="translate(470 120)">
-        <path d="M0 22 L22 40 L16 12 L46 0 L23 -16 L30 -44 L0 -22 L-22 -44 L-15 -16 L-46 0 L-18 12 L-24 42 Z" fill="#ff5b2d" stroke="#201824" stroke-width="3" />
-        <text x="-74" y="8" fill="#241824" font-size="18" font-weight="900" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">${escapeHtml(
-          heroCallout,
-        )}</text>
+      <g transform="translate(480 136)">
+        <path d="M0 22 L22 40 L16 12 L46 0 L23 -16 L30 -44 L0 -22 L-22 -44 L-15 -16 L-46 0 L-18 12 L-24 42 Z" fill="#FF6A33" stroke="#111827" stroke-width="3" />
+        <text x="-26" y="8" fill="#111827" font-size="18" font-weight="900" font-family="Inter, sans-serif">WOW</text>
       </g>
     `);
   }
 
   if (state.accessories.has("crown")) {
     parts.push(`
-      <g transform="translate(588 196)">
-        <path d="M-52 52 L-38 8 L-10 34 L8 -4 L28 36 L58 8 L52 52 Z" fill="url(#visorGold)" stroke="#de8e00" stroke-width="4" stroke-linejoin="round" />
-        <circle cx="-38" cy="8" r="6" fill="#ffb31a" />
-        <circle cx="8" cy="-4" r="6" fill="#ffb31a" />
-        <circle cx="58" cy="8" r="6" fill="#ffb31a" />
+      <g transform="translate(600 196)">
+        <path d="M-52 52 L-38 8 L-10 34 L8 -4 L28 36 L58 8 L52 52 Z" fill="url(#visorGold)" stroke="#DE8E00" stroke-width="4" stroke-linejoin="round" />
+        <circle cx="-38" cy="8" r="6" fill="#FFB31A" />
+        <circle cx="8" cy="-4" r="6" fill="#FFB31A" />
+        <circle cx="58" cy="8" r="6" fill="#FFB31A" />
       </g>
     `);
   }
 
   if (state.accessories.has("visor")) {
     parts.push(`
-      <g transform="translate(585 340)">
-        <path d="M-76 -8 C-50 -42 50 -42 76 -8 L56 24 C22 10 -22 10 -56 24 Z" fill="#d82335" />
-        <path d="M-86 6 C-66 -26 -18 -50 0 -50 C18 -50 66 -26 86 6 L56 26 C24 14 -24 14 -56 26 Z" fill="url(#visorGold)" stroke="#de8e00" stroke-width="4" />
-        <path d="M-14 -24 L18 -10 L2 12 L-26 2 Z" fill="#ffd246" />
+      <g transform="translate(597 340)">
+        <path d="M-76 -8 C-50 -42 50 -42 76 -8 L56 24 C22 10 -22 10 -56 24 Z" fill="#D42525" />
+        <path d="M-86 6 C-66 -26 -18 -50 0 -50 C18 -50 66 -26 86 6 L56 26 C24 14 -24 14 -56 26 Z" fill="url(#visorGold)" stroke="#DE8E00" stroke-width="4" />
+        <path d="M-14 -24 L18 -10 L2 12 L-26 2 Z" fill="#FFD246" />
       </g>
     `);
   }
 
   if (state.accessories.has("badge")) {
     parts.push(`
-      <g transform="translate(585 470)">
-        <circle cx="0" cy="-20" r="11" fill="#ffab2d" stroke="#201824" stroke-width="3" />
-        <path d="M-30 10 L0 -6 L30 10 L16 22 L-16 22 Z" fill="url(#visorGold)" stroke="#201824" stroke-width="3" />
-        <path d="M-14 6 L0 22 L14 6" fill="none" stroke="#201824" stroke-width="3" stroke-linecap="round" />
+      <g transform="translate(597 470)">
+        <circle cx="0" cy="-20" r="11" fill="#FFAB2D" stroke="#111827" stroke-width="3" />
+        <path d="M-30 10 L0 -6 L30 10 L16 22 L-16 22 Z" fill="url(#visorGold)" stroke="#111827" stroke-width="3" />
+        <path d="M-14 6 L0 22 L14 6" fill="none" stroke="#111827" stroke-width="3" stroke-linecap="round" />
       </g>
     `);
   }
 
   if (state.accessories.has("lightning")) {
     parts.push(`
-      <path d="M594 544 L560 622 L590 622 L556 696 L636 604 L602 604 L630 544 Z" fill="#ffdf31" stroke="#201824" stroke-width="4" stroke-linejoin="round" />
+      <path d="M606 544 L572 622 L602 622 L568 696 L648 604 L614 604 L642 544 Z" fill="#FFDF31" stroke="#111827" stroke-width="4" stroke-linejoin="round" />
     `);
   }
 
   if (state.accessories.has("belt")) {
     parts.push(`
-      <g transform="translate(586 676)">
-        <rect x="-84" y="-12" width="168" height="24" rx="12" fill="url(#beltGold)" stroke="#c78107" stroke-width="4" />
-        <rect x="-22" y="-17" width="44" height="34" rx="10" fill="#ffd96f" stroke="#c78107" stroke-width="4" />
+      <g transform="translate(598 676)">
+        <rect x="-84" y="-12" width="168" height="24" rx="12" fill="url(#beltGold)" stroke="#C78107" stroke-width="4" />
+        <rect x="-22" y="-17" width="44" height="34" rx="10" fill="#FFD96F" stroke="#C78107" stroke-width="4" />
       </g>
     `);
   }
 
   if (state.accessories.has("trail")) {
     parts.push(`
-      <g transform="translate(760 646) rotate(-12)">
+      <g transform="translate(774 650) rotate(-12)">
         <path d="M0 0 C28 -14 54 -34 84 -78 C56 -70 29 -57 2 -38 Z" fill="url(#starTail)" opacity="0.9" />
-        <path d="M0 -2 L10 -20 L30 -20 L14 -32 L20 -52 L0 -40 L-20 -52 L-14 -32 L-30 -20 L-10 -20 Z" fill="#ffbf3b" stroke="#ef6c24" stroke-width="4" stroke-linejoin="round" />
+        <path d="M0 -2 L10 -20 L30 -20 L14 -32 L20 -52 L0 -40 L-20 -52 L-14 -32 L-30 -20 L-10 -20 Z" fill="#FFBF3B" stroke="#EF6C24" stroke-width="4" stroke-linejoin="round" />
       </g>
     `);
   }
 
   if (state.accessories.has("bubble")) {
     parts.push(`
-      <g transform="translate(720 150)">
+      <g transform="translate(724 156)">
         <path d="M0 0 C0 -36 32 -62 80 -62 C126 -62 156 -36 156 0 C156 34 126 58 84 58 L58 82 L62 56 C24 51 0 30 0 0 Z" fill="url(#bubbleBlue)" opacity="0.92" />
         <circle cx="54" cy="0" r="7" fill="#ffffff" />
         <circle cx="80" cy="0" r="7" fill="#ffffff" />
@@ -501,24 +536,24 @@ function renderSceneAccessories(heroCallout) {
 
 function renderStudentBlob() {
   return `
-    <g transform="translate(138 340)">
+    <g transform="translate(142 348)">
       <circle cx="116" cy="188" r="112" fill="url(#studentSkin)" filter="url(#softShadow)" />
       <path d="M47 283 C76 250 157 247 194 288 L224 462 H28 Z" fill="url(#studentShirt)" />
-      <path d="M58 318 C114 290 156 289 207 316" fill="none" stroke="#4a86ff" stroke-width="10" stroke-linecap="round" opacity="0.7" />
-      <path d="M52 356 C108 328 159 327 214 354" fill="none" stroke="#4a86ff" stroke-width="10" stroke-linecap="round" opacity="0.7" />
-      <path d="M74 255 C94 238 132 233 160 242" fill="none" stroke="#b41a18" stroke-width="16" stroke-linecap="round" />
-      <path d="M40 260 C58 246 83 244 101 249" fill="none" stroke="#b41a18" stroke-width="16" stroke-linecap="round" />
+      <path d="M58 318 C114 290 156 289 207 316" fill="none" stroke="#4A86FF" stroke-width="10" stroke-linecap="round" opacity="0.7" />
+      <path d="M52 356 C108 328 159 327 214 354" fill="none" stroke="#4A86FF" stroke-width="10" stroke-linecap="round" opacity="0.7" />
+      <path d="M74 255 C94 238 132 233 160 242" fill="none" stroke="#B41A18" stroke-width="16" stroke-linecap="round" />
+      <path d="M40 260 C58 246 83 244 101 249" fill="none" stroke="#B41A18" stroke-width="16" stroke-linecap="round" />
       <path d="M197 252 C234 260 269 296 282 344 L253 354 C245 332 225 306 194 283 Z" fill="url(#studentSkin)" />
-      <path d="M252 352 L268 346 L282 384 L264 392 Z" fill="#e32835" />
+      <path d="M252 352 L268 346 L282 384 L264 392 Z" fill="#E32835" />
       <path d="M262 344 L275 340 L288 372 L273 378 Z" fill="#101625" />
       <path d="M122 182 C145 157 184 169 183 210" fill="none" stroke="#101625" stroke-width="7" stroke-linecap="round" />
       <path d="M168 153 C174 140 190 137 201 146" fill="none" stroke="#101625" stroke-width="7" stroke-linecap="round" />
-      <circle cx="177" cy="214" r="18" fill="#7ea9ff" opacity="0.88" />
+      <circle cx="177" cy="214" r="18" fill="#7EA9FF" opacity="0.88" />
       <circle cx="188" cy="211" r="7" fill="#ffffff" />
       <circle cx="195" cy="214" r="3" fill="#151522" />
-      <ellipse cx="197" cy="245" rx="34" ry="26" fill="#ff8da8" opacity="0.9" />
+      <ellipse cx="197" cy="245" rx="34" ry="26" fill="#FF8DA8" opacity="0.9" />
       <path d="M228 262 C243 248 261 246 274 252 C266 266 251 278 234 280 Z" fill="#101625" />
-      <path d="M245 274 C252 284 256 293 255 304 C243 300 234 292 229 282 Z" fill="#e32835" />
+      <path d="M245 274 C252 284 256 293 255 304 C243 300 234 292 229 282 Z" fill="#E32835" />
       <path d="M188 239 l4 -6" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
       <path d="M198 244 l4 -6" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
       <path d="M208 250 l4 -6" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
@@ -526,37 +561,16 @@ function renderStudentBlob() {
   `;
 }
 
-function renderAccessoryPills(labels) {
-  if (!labels.length) {
-    return `
-      <text x="28" y="70" fill="#6b6574" font-size="18" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">
-        Chưa chọn phụ kiện. Dùng bảng bên trái để bật thêm chi tiết.
-      </text>
-    `;
-  }
-
-  let x = 28;
-  let y = 58;
-
-  return labels
-    .map((label) => {
-      const width = Math.max(104, label.length * 9 + 28);
-      if (x + width > 368) {
-        x = 28;
-        y += 42;
-      }
-      const chip = `
-        <g transform="translate(${x} ${y})">
-          <rect x="0" y="0" width="${width}" height="30" rx="15" fill="#fff4e6" stroke="rgba(239, 90, 72, 0.18)" />
-          <text x="16" y="20" fill="#201824" font-size="15" font-family="'Avenir Next', 'Trebuchet MS', sans-serif">${escapeHtml(
-            label,
-          )}</text>
-        </g>
-      `;
-      x += width + 10;
-      return chip;
-    })
-    .join("");
+function renderDolMark(x, y, scale) {
+  return `
+    <g transform="translate(${x} ${y}) scale(${scale})">
+      <path d="M27.3475 10.2859C20.9279 7.26758 12.3458 9.93899 7.75067 12.4022C7.6831 12.4369 7.58174 12.4716 7.51416 12.5063C19.948 7.05941 27.111 9.80022 29.6113 11.639L29.2735 11.3961C28.8342 11.0492 28.1585 10.6676 27.3475 10.2859Z" fill="#D42525" />
+      <path opacity="0.3" d="M16.569 22.4632C16.6703 22.3244 16.569 23.1918 16.1297 24.0938C15.5216 25.4122 14.3728 26.9387 15.0485 26.8693C15.8932 26.7652 16.6366 26.5224 17.2785 26.2448C19.0693 25.4122 20.1505 24.0938 20.8262 22.8448C21.5696 21.3183 21.7047 19.8959 21.8399 19.5489C22.0764 18.8204 21.6371 17.8489 25.7592 16.4959C25.793 16.4959 25.8268 16.4959 25.8268 16.4612C22.9211 16.4612 11.1292 17.1551 5.21631 36.0631C9.16947 27.9795 16.3663 22.706 16.569 22.4632Z" fill="#D42525" />
+      <path d="M32.9559 15.4899C32.9222 15.3512 32.6519 15.0389 32.5167 15.1083C31.2328 15.5593 28.8 15.594 25.8943 16.5308H25.8605H25.8267C25.1848 16.7389 24.6442 16.9471 24.2049 17.1206C24.036 17.1899 23.867 17.2593 23.7319 17.3634C21.8736 18.3001 22.1101 19.0287 21.9074 19.5838C21.9074 19.6185 21.8736 19.6879 21.8736 19.7573C21.8736 19.8267 21.8398 19.9307 21.806 20.0348C21.7722 20.1389 21.7722 20.243 21.7384 20.3471C21.7384 20.3818 21.7384 20.3818 21.7384 20.4165C21.7046 20.5205 21.6708 20.6593 21.6708 20.7634C21.6708 20.7981 21.6708 20.7981 21.6708 20.8328C21.6371 20.9716 21.6033 21.1103 21.5695 21.2491C21.5695 21.2838 21.5695 21.2838 21.5357 21.3185C21.5019 21.4573 21.4343 21.6307 21.4005 21.7695C21.4005 21.8042 21.4005 21.8042 21.3668 21.8389C21.2992 22.0124 21.2654 22.1511 21.164 22.3246V22.3593C20.5221 23.8858 19.3057 25.6205 16.873 26.4879C16.873 26.4879 16.873 26.4879 16.8392 26.4879C16.6703 26.5572 16.5351 26.5919 16.3662 26.6266C16.3324 26.6266 16.3324 26.6266 16.2986 26.6613C16.1297 26.696 15.9945 26.7307 15.8256 26.7654C15.7918 26.7654 15.758 26.7654 15.7242 26.8001C15.5215 26.8348 15.3188 26.8695 15.116 26.9042C14.9809 26.9389 14.9133 26.8695 14.9133 26.8001C14.8795 26.5225 15.3525 25.7246 15.8256 24.8919C15.9607 24.6491 16.0959 24.3715 16.1972 24.1287C16.4337 23.643 16.5689 23.192 16.6027 22.8797C16.6365 22.6715 16.6703 22.5328 16.6365 22.4981H16.6027C16.3662 22.7062 9.16939 27.9797 5.21622 36.0633C5.21622 36.0286 5.25001 35.9939 5.25001 35.9592C5.14865 36.2021 5.0135 36.445 4.91213 36.6878C4.84456 36.8266 4.94592 37.0001 5.08107 37.0001H15.9945C20.9951 37.0001 25.1848 35.3694 28.496 32.0735C31.8072 28.7776 33.4965 24.7532 33.4965 20.0001C33.5303 18.4042 33.3276 16.9124 32.9559 15.4899Z" fill="#D42525" />
+      <path d="M28.5299 7.92651C25.2187 4.6306 21.0628 3 16.0284 3H4.20273C4.10136 3 4 3.10408 4 3.20816V9.00201C4 10.0081 4.30409 10.9796 4.91227 11.7775C5.62181 12.6795 6.56787 13.0959 7.78422 12.4367C12.3456 9.97344 20.9276 7.30202 27.3811 10.3204C27.55 10.3898 27.6852 10.4591 27.8541 10.5632C28.4623 10.8755 28.9353 11.153 29.3408 11.4306L29.6787 11.6734C29.6787 11.6734 29.6449 11.6734 29.6449 11.6387C30.422 12.2285 30.7937 12.7142 30.9288 12.853C30.9626 12.8877 30.9964 12.9224 31.064 12.9224C31.2329 12.9571 31.7059 13.0265 32.2127 13.1653C31.3343 11.2571 30.1517 9.48773 28.5299 7.92651Z" fill="#D42525" />
+      <text x="44" y="26" fill="#334155" font-size="16" font-weight="800" font-family="Inter, sans-serif">DOL</text>
+    </g>
+  `;
 }
 
 function renderTextBlock({
@@ -586,12 +600,17 @@ function renderTextBlock({
   `;
 }
 
-function buildHeroCallout() {
-  if (!state.student.name) {
-    return state.student.gender === "girl" ? "SUPER HER" : "HERO MODE";
-  }
+function fitTextLayout(value, { maxChars, maxLines, baseSize, minSize }) {
+  const lines = wrapText(value, maxChars, maxLines);
+  const longest = Math.max(...lines.map((line) => line.length), 0);
+  const overflowPenalty = Math.max(0, longest - Math.floor(maxChars * 0.7)) * 1.4;
+  const linePenalty = Math.max(0, lines.length - 1) * 3.4;
+  const size = clamp(baseSize - overflowPenalty - linePenalty, minSize, baseSize);
 
-  return `SUPER ${state.student.name.toUpperCase().slice(0, 8)}`;
+  return {
+    lines,
+    size,
+  };
 }
 
 function getDisplayText(key) {
@@ -670,7 +689,7 @@ function randomizeAccessories() {
 }
 
 async function downloadScene(type) {
-  const svgElement = refs.scenePreview.querySelector("svg");
+  const svgElement = refs.scenePreviews[0]?.querySelector("svg");
   if (!svgElement) {
     return;
   }
@@ -681,7 +700,10 @@ async function downloadScene(type) {
     : `<svg xmlns="http://www.w3.org/2000/svg">${serialized}</svg>`;
 
   if (type === "svg") {
-    downloadBlob(new Blob([svgMarkup], { type: "image/svg+xml;charset=utf-8" }), buildDownloadName("svg"));
+    downloadBlob(
+      new Blob([svgMarkup], { type: "image/svg+xml;charset=utf-8" }),
+      buildDownloadName("svg"),
+    );
     return;
   }
 
@@ -694,7 +716,7 @@ async function downloadScene(type) {
     canvas.width = 1920;
     canvas.height = 1230;
     const context = canvas.getContext("2d");
-    context.fillStyle = "#fffdf8";
+    context.fillStyle = "#F8FAFC";
     context.fillRect(0, 0, canvas.width, canvas.height);
     context.drawImage(image, 0, 0, canvas.width, canvas.height);
 
@@ -731,11 +753,17 @@ function downloadBlob(blob, fileName) {
 
 function buildDownloadName(extension) {
   const safeName = `${state.student.name || "student"}-${state.student.classCode || "class"}`
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
   return `me-in-the-mirror-${safeName || "poster"}.${extension}`;
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
 }
 
 function escapeHtml(value) {

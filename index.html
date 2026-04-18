@@ -4,329 +4,321 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Me In The Mirror</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="page-shell">
-      <div class="background-orb orb-a"></div>
-      <div class="background-orb orb-b"></div>
-      <div class="background-orb orb-c"></div>
+    <div class="background-layer" aria-hidden="true">
+      <div class="dot-pattern"></div>
+      <div class="blob blob-red"></div>
+      <div class="blob blob-blue"></div>
+    </div>
 
-      <section id="landingScreen" class="landing-screen panel">
-        <div class="landing-copy">
-          <p class="eyebrow">Creative Reflection Activity</p>
-          <h1>
-            Me In
-            <span class="script-word">The Mirror</span>
-          </h1>
-          <p class="lead">
-            Biến phần tự nhận diện bản thân của học viên thành một poster anh
-            hùng sống động: điền thông tin, nhập tính cách, rồi trang trí nhân
-            vật để tạo ra một hình minh hoạ có thể tải về ngay.
-          </p>
-
-          <div class="landing-highlights">
-            <article class="highlight-card">
-              <span class="highlight-number">01</span>
-              <h2>Nhập hồ sơ học viên</h2>
-              <p>Tên, code lớp và giới tính để tạo ra nhân vật phù hợp.</p>
-            </article>
-            <article class="highlight-card">
-              <span class="highlight-number">02</span>
-              <h2>Điền 3 góc nhìn</h2>
-              <p>
-                The Proud trên áo, The Myth trên gương, The Upgrade trên áo
-                choàng.
-              </p>
-            </article>
-            <article class="highlight-card">
-              <span class="highlight-number">03</span>
-              <h2>Trang trí tự do</h2>
-              <p>
-                Chọn phụ kiện để hero trong gương mang phong cách riêng của học
-                viên.
-              </p>
-            </article>
+    <main class="page-shell">
+      <section id="landingScreen" class="screen screen-center">
+        <div class="glass-card landing-card">
+          <div class="title-wrap title-wrap-center">
+            <h1>Me In The Mirror</h1>
+            <a
+              class="logo-badge"
+              href="https://www.dolenglish.vn/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Visit DOL"
+            >
+              <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M27.3475 10.2859C20.9279 7.26758 12.3458 9.93899 7.75067 12.4022C7.6831 12.4369 7.58174 12.4716 7.51416 12.5063C19.948 7.05941 27.111 9.80022 29.6113 11.639L29.2735 11.3961C28.8342 11.0492 28.1585 10.6676 27.3475 10.2859Z" fill="#D42525" />
+                <path opacity="0.3" d="M16.569 22.4632C16.6703 22.3244 16.569 23.1918 16.1297 24.0938C15.5216 25.4122 14.3728 26.9387 15.0485 26.8693C15.8932 26.7652 16.6366 26.5224 17.2785 26.2448C19.0693 25.4122 20.1505 24.0938 20.8262 22.8448C21.5696 21.3183 21.7047 19.8959 21.8399 19.5489C22.0764 18.8204 21.6371 17.8489 25.7592 16.4959C25.793 16.4959 25.8268 16.4959 25.8268 16.4612C22.9211 16.4612 11.1292 17.1551 5.21631 36.0631C9.16947 27.9795 16.3663 22.706 16.569 22.4632Z" fill="#D42525" />
+                <path d="M32.9559 15.4899C32.9222 15.3512 32.6519 15.0389 32.5167 15.1083C31.2328 15.5593 28.8 15.594 25.8943 16.5308H25.8605H25.8267C25.1848 16.7389 24.6442 16.9471 24.2049 17.1206C24.036 17.1899 23.867 17.2593 23.7319 17.3634C21.8736 18.3001 22.1101 19.0287 21.9074 19.5838C21.9074 19.6185 21.8736 19.6879 21.8736 19.7573C21.8736 19.8267 21.8398 19.9307 21.806 20.0348C21.7722 20.1389 21.7722 20.243 21.7384 20.3471C21.7384 20.3818 21.7384 20.3818 21.7384 20.4165C21.7046 20.5205 21.6708 20.6593 21.6708 20.7634C21.6708 20.7981 21.6708 20.7981 21.6708 20.8328C21.6371 20.9716 21.6033 21.1103 21.5695 21.2491C21.5695 21.2838 21.5695 21.2838 21.5357 21.3185C21.5019 21.4573 21.4343 21.6307 21.4005 21.7695C21.4005 21.8042 21.4005 21.8042 21.3668 21.8389C21.2992 22.0124 21.2654 22.1511 21.164 22.3246V22.3593C20.5221 23.8858 19.3057 25.6205 16.873 26.4879C16.873 26.4879 16.873 26.4879 16.8392 26.4879C16.6703 26.5572 16.5351 26.5919 16.3662 26.6266C16.3324 26.6266 16.3324 26.6266 16.2986 26.6613C16.1297 26.696 15.9945 26.7307 15.8256 26.7654C15.7918 26.7654 15.758 26.7654 15.7242 26.8001C15.5215 26.8348 15.3188 26.8695 15.116 26.9042C14.9809 26.9389 14.9133 26.8695 14.9133 26.8001C14.8795 26.5225 15.3525 25.7246 15.8256 24.8919C15.9607 24.6491 16.0959 24.3715 16.1972 24.1287C16.4337 23.643 16.5689 23.192 16.6027 22.8797C16.6365 22.6715 16.6703 22.5328 16.6365 22.4981H16.6027C16.3662 22.7062 9.16939 27.9797 5.21622 36.0633C5.21622 36.0286 5.25001 35.9939 5.25001 35.9592C5.14865 36.2021 5.0135 36.445 4.91213 36.6878C4.84456 36.8266 4.94592 37.0001 5.08107 37.0001H15.9945C20.9951 37.0001 25.1848 35.3694 28.496 32.0735C31.8072 28.7776 33.4965 24.7532 33.4965 20.0001C33.5303 18.4042 33.3276 16.9124 32.9559 15.4899Z" fill="#D42525" />
+                <path d="M28.5299 7.92651C25.2187 4.6306 21.0628 3 16.0284 3H4.20273C4.10136 3 4 3.10408 4 3.20816V9.00201C4 10.0081 4.30409 10.9796 4.91227 11.7775C5.62181 12.6795 6.56787 13.0959 7.78422 12.4367C12.3456 9.97344 20.9276 7.30202 27.3811 10.3204C27.55 10.3898 27.6852 10.4591 27.8541 10.5632C28.4623 10.8755 28.9353 11.153 29.3408 11.4306L29.6787 11.6734C29.6787 11.6734 29.6449 11.6734 29.6449 11.6387C30.422 12.2285 30.7937 12.7142 30.9288 12.853C30.9626 12.8877 30.9964 12.9224 31.064 12.9224C31.2329 12.9571 31.7059 13.0265 32.2127 13.1653C31.3343 11.2571 30.1517 9.48773 28.5299 7.92651Z" fill="#D42525" />
+              </svg>
+            </a>
           </div>
 
-          <div class="mini-guide">
-            <div class="mini-guide-header">
-              <span class="mini-dot mini-dot-blue"></span>
-              <strong>The Proud</strong>
-              <span>màu xanh trên áo</span>
-            </div>
-            <div class="mini-guide-header">
-              <span class="mini-dot mini-dot-dark"></span>
-              <strong>The Myth</strong>
-              <span>màu đen trên gương</span>
-            </div>
-            <div class="mini-guide-header">
-              <span class="mini-dot mini-dot-red"></span>
-              <strong>The Upgrade</strong>
-              <span>đỏ sang xanh trên áo choàng</span>
-            </div>
-          </div>
+          <form id="landingForm" class="stack-form" novalidate>
+            <label class="field-group" for="studentName">
+              <span>Student Name</span>
+              <input
+                id="studentName"
+                name="studentName"
+                class="field-input"
+                type="text"
+                maxlength="28"
+                placeholder="Enter name"
+                required
+              />
+            </label>
+
+            <label class="field-group" for="classCode">
+              <span>Class Code</span>
+              <input
+                id="classCode"
+                name="classCode"
+                class="field-input"
+                type="text"
+                maxlength="18"
+                placeholder="Enter class code"
+                required
+              />
+            </label>
+
+            <fieldset class="field-group">
+              <legend>Gender</legend>
+              <div class="gender-grid">
+                <label class="chip-option">
+                  <input type="radio" name="gender" value="boy" checked />
+                  <span>Boy Hero</span>
+                </label>
+                <label class="chip-option">
+                  <input type="radio" name="gender" value="girl" />
+                  <span>Girl Hero</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <p id="landingError" class="error-text" hidden>
+              Please enter Student Name and Class Code.
+            </p>
+
+            <button type="submit" class="primary-button">Ready</button>
+          </form>
         </div>
-
-        <form id="landingForm" class="landing-form card" novalidate>
-          <div class="step-chip">Step 1</div>
-          <h2>Tạo hồ sơ học viên</h2>
-          <p class="card-copy">
-            Khi hoàn thành bước này, app sẽ chuyển sang trang tạo poster minh
-            hoạ tương tác.
-          </p>
-
-          <label class="field-group" for="studentName">
-            <span>Tên học viên</span>
-            <input
-              id="studentName"
-              name="studentName"
-              type="text"
-              maxlength="28"
-              placeholder="Ví dụ: Minh Anh"
-              required
-            />
-          </label>
-
-          <label class="field-group" for="classCode">
-            <span>Code lớp</span>
-            <input
-              id="classCode"
-              name="classCode"
-              type="text"
-              maxlength="18"
-              placeholder="Ví dụ: A1-2026"
-              required
-            />
-          </label>
-
-          <fieldset class="field-group">
-            <legend>Giới tính của hero trong gương</legend>
-            <div class="gender-grid">
-              <label class="gender-option">
-                <input type="radio" name="gender" value="boy" checked />
-                <span class="gender-option-body">
-                  <strong>Boy Hero</strong>
-                  <small>Tóc ngắn, dáng năng động</small>
-                </span>
-              </label>
-              <label class="gender-option">
-                <input type="radio" name="gender" value="girl" />
-                <span class="gender-option-body">
-                  <strong>Girl Hero</strong>
-                  <small>Tóc dài, tạo hình mềm hơn</small>
-                </span>
-              </label>
-            </div>
-          </fieldset>
-
-          <p id="landingError" class="error-text" hidden>
-            Vui lòng điền đủ tên học viên và code lớp.
-          </p>
-
-          <button type="submit" class="primary-button full-width">
-            Đi tới gương thần
-          </button>
-        </form>
       </section>
 
-      <section id="builderScreen" class="builder-screen hidden">
-        <header class="builder-header">
-          <div class="builder-title">
-            <p class="eyebrow">Interactive Poster Builder</p>
-            <h2>Me In The Mirror Studio</h2>
-          </div>
+      <section id="personalityScreen" class="screen hidden">
+        <div class="screen-stack">
+          <header class="screen-header">
+            <div class="title-wrap">
+              <p class="eyebrow">Personality</p>
+              <h2>Me In The Mirror</h2>
+              <a
+                class="logo-badge"
+                href="https://www.dolenglish.vn/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Visit DOL"
+              >
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M27.3475 10.2859C20.9279 7.26758 12.3458 9.93899 7.75067 12.4022C7.6831 12.4369 7.58174 12.4716 7.51416 12.5063C19.948 7.05941 27.111 9.80022 29.6113 11.639L29.2735 11.3961C28.8342 11.0492 28.1585 10.6676 27.3475 10.2859Z" fill="#D42525" />
+                  <path opacity="0.3" d="M16.569 22.4632C16.6703 22.3244 16.569 23.1918 16.1297 24.0938C15.5216 25.4122 14.3728 26.9387 15.0485 26.8693C15.8932 26.7652 16.6366 26.5224 17.2785 26.2448C19.0693 25.4122 20.1505 24.0938 20.8262 22.8448C21.5696 21.3183 21.7047 19.8959 21.8399 19.5489C22.0764 18.8204 21.6371 17.8489 25.7592 16.4959C25.793 16.4959 25.8268 16.4959 25.8268 16.4612C22.9211 16.4612 11.1292 17.1551 5.21631 36.0631C9.16947 27.9795 16.3663 22.706 16.569 22.4632Z" fill="#D42525" />
+                  <path d="M32.9559 15.4899C32.9222 15.3512 32.6519 15.0389 32.5167 15.1083C31.2328 15.5593 28.8 15.594 25.8943 16.5308H25.8605H25.8267C25.1848 16.7389 24.6442 16.9471 24.2049 17.1206C24.036 17.1899 23.867 17.2593 23.7319 17.3634C21.8736 18.3001 22.1101 19.0287 21.9074 19.5838C21.9074 19.6185 21.8736 19.6879 21.8736 19.7573C21.8736 19.8267 21.8398 19.9307 21.806 20.0348C21.7722 20.1389 21.7722 20.243 21.7384 20.3471C21.7384 20.3818 21.7384 20.3818 21.7384 20.4165C21.7046 20.5205 21.6708 20.6593 21.6708 20.7634C21.6708 20.7981 21.6708 20.7981 21.6708 20.8328C21.6371 20.9716 21.6033 21.1103 21.5695 21.2491C21.5695 21.2838 21.5695 21.2838 21.5357 21.3185C21.5019 21.4573 21.4343 21.6307 21.4005 21.7695C21.4005 21.8042 21.4005 21.8042 21.3668 21.8389C21.2992 22.0124 21.2654 22.1511 21.164 22.3246V22.3593C20.5221 23.8858 19.3057 25.6205 16.873 26.4879C16.873 26.4879 16.873 26.4879 16.8392 26.4879C16.6703 26.5572 16.5351 26.5919 16.3662 26.6266C16.3324 26.6266 16.3324 26.6266 16.2986 26.6613C16.1297 26.696 15.9945 26.7307 15.8256 26.7654C15.7918 26.7654 15.758 26.7654 15.7242 26.8001C15.5215 26.8348 15.3188 26.8695 15.116 26.9042C14.9809 26.9389 14.9133 26.8695 14.9133 26.8001C14.8795 26.5225 15.3525 25.7246 15.8256 24.8919C15.9607 24.6491 16.0959 24.3715 16.1972 24.1287C16.4337 23.643 16.5689 23.192 16.6027 22.8797C16.6365 22.6715 16.6703 22.5328 16.6365 22.4981H16.6027C16.3662 22.7062 9.16939 27.9797 5.21622 36.0633C5.21622 36.0286 5.25001 35.9939 5.25001 35.9592C5.14865 36.2021 5.0135 36.445 4.91213 36.6878C4.84456 36.8266 4.94592 37.0001 5.08107 37.0001H15.9945C20.9951 37.0001 25.1848 35.3694 28.496 32.0735C31.8072 28.7776 33.4965 24.7532 33.4965 20.0001C33.5303 18.4042 33.3276 16.9124 32.9559 15.4899Z" fill="#D42525" />
+                  <path d="M28.5299 7.92651C25.2187 4.6306 21.0628 3 16.0284 3H4.20273C4.10136 3 4 3.10408 4 3.20816V9.00201C4 10.0081 4.30409 10.9796 4.91227 11.7775C5.62181 12.6795 6.56787 13.0959 7.78422 12.4367C12.3456 9.97344 20.9276 7.30202 27.3811 10.3204C27.55 10.3898 27.6852 10.4591 27.8541 10.5632C28.4623 10.8755 28.9353 11.153 29.3408 11.4306L29.6787 11.6734C29.6787 11.6734 29.6449 11.6734 29.6449 11.6387C30.422 12.2285 30.7937 12.7142 30.9288 12.853C30.9626 12.8877 30.9964 12.9224 31.064 12.9224C31.2329 12.9571 31.7059 13.0265 32.2127 13.1653C31.3343 11.2571 30.1517 9.48773 28.5299 7.92651Z" fill="#D42525" />
+                </svg>
+              </a>
+            </div>
 
-          <div id="studentSummary" class="student-summary"></div>
+            <div class="screen-actions">
+              <button id="personalityBackButton" type="button" class="subtle-button">
+                Back
+              </button>
+              <button id="toDecorateButton" type="button" class="primary-button">
+                Next: Decorate
+              </button>
+            </div>
+          </header>
 
-          <div class="header-actions">
-            <button id="backButton" type="button" class="ghost-button">
-              Đổi học viên
-            </button>
-            <button id="randomizeButton" type="button" class="ghost-button accent">
-              Mix phụ kiện
-            </button>
-            <button id="downloadSvgButton" type="button" class="ghost-button">
-              Tải SVG
-            </button>
-            <button id="downloadPngButton" type="button" class="primary-button">
-              Tải PNG
-            </button>
-          </div>
-        </header>
+          <div class="summary-row" data-student-summary></div>
 
-        <div class="builder-grid">
-          <aside class="control-panel">
-            <section class="control-card card">
-              <div class="card-head">
-                <div class="step-chip muted">Step 2</div>
-                <h3>Điền 3 góc nhìn</h3>
-              </div>
-
+          <div class="studio-grid">
+            <aside class="glass-card control-card">
               <label class="field-group" for="proudInput">
-                <span>The Proud</span>
-                <small>Điều học viên tự hào về bản thân</small>
+                <span><i class="color-dot dot-blue"></i>The Proud</span>
                 <input
                   id="proudInput"
+                  class="field-input"
                   type="text"
-                  maxlength="30"
-                  placeholder="Ví dụ: organized"
+                  maxlength="26"
+                  placeholder="Enter the proud"
                 />
               </label>
 
               <label class="field-group" for="mythInput">
-                <span>The Myth</span>
-                <small>Điều người khác thường hiểu lầm</small>
+                <span><i class="color-dot dot-dark"></i>The Myth</span>
                 <input
                   id="mythInput"
+                  class="field-input"
                   type="text"
-                  maxlength="30"
-                  placeholder="Ví dụ: selfish"
+                  maxlength="24"
+                  placeholder="Enter the myth"
                 />
               </label>
 
-              <div class="upgrade-grid">
-                <label class="field-group" for="weaknessInput">
-                  <span>The Upgrade - Bad</span>
-                  <small>Điểm cần cải thiện</small>
-                  <input
-                    id="weaknessInput"
-                    type="text"
-                    maxlength="24"
-                    placeholder="Ví dụ: quiet"
-                  />
-                </label>
-
-                <label class="field-group" for="betterInput">
-                  <span>The Upgrade - Better</span>
-                  <small>Hướng thay đổi mong muốn</small>
-                  <input
-                    id="betterInput"
-                    type="text"
-                    maxlength="24"
-                    placeholder="Ví dụ: talkative"
-                  />
-                </label>
+              <div class="field-group">
+                <span><i class="color-dot dot-red"></i>The Upgrade</span>
+                <div class="upgrade-grid">
+                  <label class="field-subgroup" for="weaknessInput">
+                    <span>The weakness</span>
+                    <input
+                      id="weaknessInput"
+                      class="field-input"
+                      type="text"
+                      maxlength="18"
+                      placeholder="Weakness"
+                    />
+                  </label>
+                  <label class="field-subgroup" for="betterInput">
+                    <span>The change</span>
+                    <input
+                      id="betterInput"
+                      class="field-input"
+                      type="text"
+                      maxlength="18"
+                      placeholder="Change"
+                    />
+                  </label>
+                </div>
               </div>
+            </aside>
+
+            <section class="glass-card preview-card">
+              <div class="preview-meta">
+                <span class="preview-chip">Live Preview</span>
+              </div>
+              <div class="scene-preview" data-scene-preview aria-live="polite"></div>
             </section>
+          </div>
+        </div>
+      </section>
 
-            <section class="control-card card">
-              <div class="card-head">
-                <div class="step-chip muted">Step 3</div>
-                <h3>Chọn phụ kiện</h3>
+      <section id="decorateScreen" class="screen hidden">
+        <div class="screen-stack">
+          <header class="screen-header">
+            <div class="title-wrap">
+              <p class="eyebrow">Decorate</p>
+              <h2>Me In The Mirror</h2>
+              <a
+                class="logo-badge"
+                href="https://www.dolenglish.vn/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Visit DOL"
+              >
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M27.3475 10.2859C20.9279 7.26758 12.3458 9.93899 7.75067 12.4022C7.6831 12.4369 7.58174 12.4716 7.51416 12.5063C19.948 7.05941 27.111 9.80022 29.6113 11.639L29.2735 11.3961C28.8342 11.0492 28.1585 10.6676 27.3475 10.2859Z" fill="#D42525" />
+                  <path opacity="0.3" d="M16.569 22.4632C16.6703 22.3244 16.569 23.1918 16.1297 24.0938C15.5216 25.4122 14.3728 26.9387 15.0485 26.8693C15.8932 26.7652 16.6366 26.5224 17.2785 26.2448C19.0693 25.4122 20.1505 24.0938 20.8262 22.8448C21.5696 21.3183 21.7047 19.8959 21.8399 19.5489C22.0764 18.8204 21.6371 17.8489 25.7592 16.4959C25.793 16.4959 25.8268 16.4959 25.8268 16.4612C22.9211 16.4612 11.1292 17.1551 5.21631 36.0631C9.16947 27.9795 16.3663 22.706 16.569 22.4632Z" fill="#D42525" />
+                  <path d="M32.9559 15.4899C32.9222 15.3512 32.6519 15.0389 32.5167 15.1083C31.2328 15.5593 28.8 15.594 25.8943 16.5308H25.8605H25.8267C25.1848 16.7389 24.6442 16.9471 24.2049 17.1206C24.036 17.1899 23.867 17.2593 23.7319 17.3634C21.8736 18.3001 22.1101 19.0287 21.9074 19.5838C21.9074 19.6185 21.8736 19.6879 21.8736 19.7573C21.8736 19.8267 21.8398 19.9307 21.806 20.0348C21.7722 20.1389 21.7722 20.243 21.7384 20.3471C21.7384 20.3818 21.7384 20.3818 21.7384 20.4165C21.7046 20.5205 21.6708 20.6593 21.6708 20.7634C21.6708 20.7981 21.6708 20.7981 21.6708 20.8328C21.6371 20.9716 21.6033 21.1103 21.5695 21.2491C21.5695 21.2838 21.5695 21.2838 21.5357 21.3185C21.5019 21.4573 21.4343 21.6307 21.4005 21.7695C21.4005 21.8042 21.4005 21.8042 21.3668 21.8389C21.2992 22.0124 21.2654 22.1511 21.164 22.3246V22.3593C20.5221 23.8858 19.3057 25.6205 16.873 26.4879C16.873 26.4879 16.873 26.4879 16.8392 26.4879C16.6703 26.5572 16.5351 26.5919 16.3662 26.6266C16.3324 26.6266 16.3324 26.6266 16.2986 26.6613C16.1297 26.696 15.9945 26.7307 15.8256 26.7654C15.7918 26.7654 15.758 26.7654 15.7242 26.8001C15.5215 26.8348 15.3188 26.8695 15.116 26.9042C14.9809 26.9389 14.9133 26.8695 14.9133 26.8001C14.8795 26.5225 15.3525 25.7246 15.8256 24.8919C15.9607 24.6491 16.0959 24.3715 16.1972 24.1287C16.4337 23.643 16.5689 23.192 16.6027 22.8797C16.6365 22.6715 16.6703 22.5328 16.6365 22.4981H16.6027C16.3662 22.7062 9.16939 27.9797 5.21622 36.0633C5.21622 36.0286 5.25001 35.9939 5.25001 35.9592C5.14865 36.2021 5.0135 36.445 4.91213 36.6878C4.84456 36.8266 4.94592 37.0001 5.08107 37.0001H15.9945C20.9951 37.0001 25.1848 35.3694 28.496 32.0735C31.8072 28.7776 33.4965 24.7532 33.4965 20.0001C33.5303 18.4042 33.3276 16.9124 32.9559 15.4899Z" fill="#D42525" />
+                  <path d="M28.5299 7.92651C25.2187 4.6306 21.0628 3 16.0284 3H4.20273C4.10136 3 4 3.10408 4 3.20816V9.00201C4 10.0081 4.30409 10.9796 4.91227 11.7775C5.62181 12.6795 6.56787 13.0959 7.78422 12.4367C12.3456 9.97344 20.9276 7.30202 27.3811 10.3204C27.55 10.3898 27.6852 10.4591 27.8541 10.5632C28.4623 10.8755 28.9353 11.153 29.3408 11.4306L29.6787 11.6734C29.6787 11.6734 29.6449 11.6734 29.6449 11.6387C30.422 12.2285 30.7937 12.7142 30.9288 12.853C30.9626 12.8877 30.9964 12.9224 31.064 12.9224C31.2329 12.9571 31.7059 13.0265 32.2127 13.1653C31.3343 11.2571 30.1517 9.48773 28.5299 7.92651Z" fill="#D42525" />
+                </svg>
+              </a>
+            </div>
+
+            <div class="screen-actions">
+              <button id="decorateBackButton" type="button" class="subtle-button">
+                Back
+              </button>
+              <button id="randomizeButton" type="button" class="accent-button">
+                Mix Accessories
+              </button>
+              <button id="downloadSvgButton" type="button" class="subtle-button">
+                Download SVG
+              </button>
+              <button id="downloadPngButton" type="button" class="primary-button">
+                Download PNG
+              </button>
+            </div>
+          </header>
+
+          <div class="summary-row" data-student-summary></div>
+
+          <div class="studio-grid">
+            <aside class="glass-card control-card">
+              <div class="control-topline">
+                <span class="preview-chip">Accessories</span>
+                <span class="count-badge" data-accessory-count>0 accessories</span>
               </div>
-              <p class="card-copy">
-                Học viên có thể chọn nhiều phụ kiện cùng lúc để làm poster sinh
-                động hơn.
-              </p>
 
               <div class="accessory-grid">
                 <label class="accessory-option">
                   <input type="checkbox" data-accessory="visor" />
-                  <span class="accessory-option-body">
-                    <span class="accessory-swatch swatch-red"></span>
+                  <span class="accessory-card">
+                    <i class="swatch swatch-red"></i>
                     <strong>Hero visor</strong>
-                    <small>Mặt nạ trung tâm</small>
                   </span>
                 </label>
 
                 <label class="accessory-option">
                   <input type="checkbox" data-accessory="crown" />
-                  <span class="accessory-option-body">
-                    <span class="accessory-swatch swatch-gold"></span>
+                  <span class="accessory-card">
+                    <i class="swatch swatch-gold"></i>
                     <strong>Power crown</strong>
-                    <small>Vương miện nổi bật</small>
                   </span>
                 </label>
 
                 <label class="accessory-option">
                   <input type="checkbox" data-accessory="comic" />
-                  <span class="accessory-option-body">
-                    <span class="accessory-swatch swatch-orange"></span>
+                  <span class="accessory-card">
+                    <i class="swatch swatch-orange"></i>
                     <strong>Comic burst</strong>
-                    <small>Khung chữ truyện tranh</small>
                   </span>
                 </label>
 
                 <label class="accessory-option">
                   <input type="checkbox" data-accessory="lightning" />
-                  <span class="accessory-option-body">
-                    <span class="accessory-swatch swatch-yellow"></span>
+                  <span class="accessory-card">
+                    <i class="swatch swatch-yellow"></i>
                     <strong>Lightning bolt</strong>
-                    <small>Tia sét trên áo</small>
                   </span>
                 </label>
 
                 <label class="accessory-option">
                   <input type="checkbox" data-accessory="belt" />
-                  <span class="accessory-option-body">
-                    <span class="accessory-swatch swatch-sand"></span>
+                  <span class="accessory-card">
+                    <i class="swatch swatch-sand"></i>
                     <strong>Victory belt</strong>
-                    <small>Đai lưng chiến thắng</small>
                   </span>
                 </label>
 
                 <label class="accessory-option">
                   <input type="checkbox" data-accessory="badge" />
-                  <span class="accessory-option-body">
-                    <span class="accessory-swatch swatch-blue"></span>
+                  <span class="accessory-card">
+                    <i class="swatch swatch-blue"></i>
                     <strong>Wing badge</strong>
-                    <small>Biểu tượng trước ngực</small>
                   </span>
                 </label>
 
                 <label class="accessory-option">
                   <input type="checkbox" data-accessory="trail" />
-                  <span class="accessory-option-body">
-                    <span class="accessory-swatch swatch-cyan"></span>
+                  <span class="accessory-card">
+                    <i class="swatch swatch-cyan"></i>
                     <strong>Star trail</strong>
-                    <small>Đuôi sao bên mép gương</small>
                   </span>
                 </label>
 
                 <label class="accessory-option">
                   <input type="checkbox" data-accessory="bubble" />
-                  <span class="accessory-option-body">
-                    <span class="accessory-swatch swatch-violet"></span>
+                  <span class="accessory-card">
+                    <i class="swatch swatch-violet"></i>
                     <strong>Speech bubble</strong>
-                    <small>Bong bóng lời nhắn</small>
                   </span>
                 </label>
               </div>
-            </section>
 
-            <section class="control-card card compact-card">
-              <h3>Cách app đặt chữ</h3>
-              <ul class="legend-list">
-                <li><span class="legend-mark mark-blue"></span> Trên áo: The Proud</li>
-                <li><span class="legend-mark mark-dark"></span> Trên gương: The Myth</li>
-                <li>
-                  <span class="legend-mark mark-red"></span> Trên áo choàng:
-                  điểm yếu
-                </li>
-                <li>
-                  <span class="legend-mark mark-blue"></span> Trên áo choàng:
-                  phiên bản tốt hơn
-                </li>
-              </ul>
-            </section>
-          </aside>
+              <button id="startOverButton" type="button" class="subtle-button subtle-button-wide">
+                Start Over
+              </button>
+            </aside>
 
-          <section class="preview-panel">
-            <div class="preview-frame panel">
+            <section class="glass-card preview-card">
               <div class="preview-meta">
-                <div>
-                  <p class="eyebrow">Live Poster Preview</p>
-                  <h3>Poster minh hoạ cập nhật theo thời gian thực</h3>
-                </div>
-                <span id="activeAccessoryCount" class="count-badge">0 phụ kiện</span>
+                <span class="preview-chip">Live Preview</span>
               </div>
-              <div id="scenePreview" class="scene-preview" aria-live="polite"></div>
-            </div>
-          </section>
+              <div class="scene-preview" data-scene-preview aria-live="polite"></div>
+            </section>
+          </div>
         </div>
       </section>
-    </div>
+    </main>
+
+    <footer class="footer-credit">
+      <a href="https://www.dolenglish.vn/" target="_blank" rel="noreferrer">
+        made with ❤️ from DOL for Dolbies
+      </a>
+    </footer>
 
     <script src="./app.js"></script>
   </body>
